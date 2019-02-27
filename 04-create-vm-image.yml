@@ -1,0 +1,29 @@
+
+---
+- name: Capture VM Image from existing VM
+  hosts: localhost
+  connection: local
+  tasks:
+    - name: Stop VM before it can be generalized and image captured
+      azure_rm_virtualmachine:
+        resource_group: "{{ resource_group }}"
+        name: "{{ vm_name }}"
+        started: no
+
+    - name: Call REST API - VirtualMachines_Generalize
+      azure_rm_resource:
+        # url: /subscriptions/{{ lookup('env','AZURE_SUBSCRIPTION_ID') }}/resourceGroups/{resourceGroupName}/providers/Microsoft.Compute/virtualMachines/{vmName}/generalize
+        api_version: '2017-12-01'
+        method: POST
+        resource_group: "{{ resource_group }}"
+        provider: compute
+        resource_type: virtualmachines
+        resource_name: "{{ vm_name }}"
+        subresource:
+          - type: generalize
+    
+    - name: Create an image from a virtual machine
+      azure_rm_image:
+        resource_group: "{{ resource_group }}"
+        name: "{{ vm_image_name }}"
+        source: "{{ vm_name }}"
