@@ -69,6 +69,6 @@ echo SP_NAME=$SP_NAME >> /home/student/Desktop/credentials.txt
 echo SP_SECRET=$SP_SECRET >> /home/student/Desktop/credentials.txt
 echo SP_OBJECT_ID=$SP_OBJECT_ID >> /home/student/Desktop/credentials.txt
 echo SP_APP_ID=$SP_APP_ID >> /home/student/Desktop/credentials.txt
-echo GUIDE_URL=https://github.com/stuartatmicrosoft/Azure-Linux-Migration-Workshop >> /home/student/Desktop/credentials.txt
+echo GUIDE_URL=https://github.com/stuartatmicrosoft/RedHatSummit2019 >> /home/student/Desktop/credentials.txt
 chown student:student /home/student/Desktop/credentials.txt
 
