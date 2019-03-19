@@ -2,7 +2,7 @@
 
 echo "`date` --BEGIN-- Provision Stage 1 Script" >>/root/lsprovision.log
 echo "********************************************************************************************"
-	echo "`date` -- Creating Student User" >>/root/lsprovision.log
+	echo "`date` -- Creating Ansible User" >>/root/lsprovision.log
 	useradd student
 echo "********************************************************************************************"
 	echo "`date` -- Setting Student User password to 'Microsoft'" >>/root/lsprovision.log
@@ -13,17 +13,10 @@ echo "**************************************************************************
 echo "********************************************************************************************"
 	echo "`date` -- Setting Root Password to 'Microsoft'" >>/root/lsprovision.log
 	echo "Microsoft" | passwd --stdin root
-#echo "********************************************************************************************"
-#	echo "`date` -- Creating required logical volumes" >>/root/lsprovision.log
-#	lvcreate -n libvirtlv -L+20G rootvg
-#	mkfs -t ext4 /dev/rootvg/libvirtlv
-#	echo "/dev/mapper/rootvg-libvirtlv /var/lib/libvirt    ext4     defaults       0 0" >> /etc/fstab 
-#        mkdir -p /var/lib/libvirt
-#	mount -a
-#####echo "********************************************************************************************"
-#####	echo "`date` -- Adding 'deltarpm' and other required RPMs" >>/root/lsprovision.log
-#####	yum -y install deltarpm epel-release
-#####	yum -y install policycoreutils-python libsemanage-devel gcc gcc-c++ kernel-devel python-devel libxslt-devel libffi-devel openssl-devel python2-pip iptables-services
+echo "********************************************************************************************"
+	echo "`date` -- Adding 'deltarpm' and other required RPMs" >>/root/lsprovision.log
+	yum -y install deltarpm epel-release
+	yum -y install policycoreutils-python libsemanage-devel gcc gcc-c++ kernel-devel python-devel libxslt-devel libffi-devel openssl-devel python2-pip iptables-services
 echo "********************************************************************************************"
 	echo "`date` -- Securing host and changing default SSH port to 2112" >>/root/lsprovision.log
 	sed -i "s/dport 22/dport 2112/g" /etc/sysconfig/iptables
@@ -35,25 +28,12 @@ echo "**************************************************************************
 	systemctl mask firewalld
 	systemctl enable iptables
 	systemctl start iptables
-#echo "********************************************************************************************"
-#	echo "`date` -- Adding package elements to enable nested virtualization" >>/root/lsprovision.log
-#	yum groups mark convert
-#	yum -y groupinstall "Virtualization Host"
-#	yum -y install virt-manager virt-install virt-viewer
-#echo "********************************************************************************************"
+echo "********************************************************************************************"
 	echo "`date` -- Adding package elements to enable graphical interface" >>/root/lsprovision.log
 	yum -y groupinstall "Server with GUI"
 echo "********************************************************************************************"
 	echo "`date` -- Setting default systemd target to graphical.target" >>/root/lsprovision.log
 	systemctl set-default graphical.target
-#echo "********************************************************************************************"
-#	echo "`date` -- Enabling and starting libvirtd" >>/root/lsprovision.log
-#	systemctl enable libvirtd
-#	systemctl start libvirtd
-#echo "********************************************************************************************"
-#        echo "`date` -- Copying the VM rebuild script to the host" >> /root/lsprovision.log
-#        wget --quiet -P /var/lib/libvirt/images https://raw.githubusercontent.com/stuartatmicrosoft/Azure-Linux-Migration-Workshop/master/provision-scripts/rebuild-migrate-host.sh
-#        chmod 755 /var/lib/libvirt/images/rebuild-migrate-host.sh
 echo "********************************************************************************************"
 	echo "`date` -- Installing noVNC environment" >>/root/lsprovision.log
 	yum -y install novnc python-websockify numpy tigervnc-server
@@ -71,10 +51,4 @@ echo "**************************************************************************
         systemctl enable websockify.service
         systemctl start vncserver@:4.service
 	systemctl start websockify.service
-#echo "********************************************************************************************"
-#	echo "`date` -- Downloading CentOS ISO from wolverine server" >>/root/lsprovision.log
-#	wget --quiet --no-check-certificate -P /var/lib/libvirt/images https://wolverine.itscloudy.af/liftshift/CentOS-7-x86_64-Minimal-1708.iso
-#        wget --quiet -P /var/lib/libvirt/images https://raw.githubusercontent.com/stuartatmicrosoft/Azure-Linux-Migration-Workshop/master/provision-scripts/migrate-host-ks.cfg
-#        chown qemu:qemu /var/lib/libvirt/images/*
-#        restorecon -rv /var/lib/libvirt/images/*
-#echo "`date` --END-- Provision Stage 1 Script" >>/root/lsprovision.log
+echo "`date` --END-- Provision Stage 1 Script" >>/root/lsprovision.log
