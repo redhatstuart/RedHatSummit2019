@@ -9,7 +9,7 @@
       "value": "Standard_D4s_v3"
     },
     "adminUsername": {
-      "value": "msadmin"
+      "value": "student"
     },
     "virtualNetworkName": {
       "value": "ansible-azure-vnet"

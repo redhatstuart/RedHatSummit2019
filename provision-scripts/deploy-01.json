@@ -67,7 +67,7 @@
         "subnetRef": "[concat(variables('vnetId'), '/subnets/', parameters('subnetName'))]",
         "jumpVMPublicIpName": "[concat('liftshift-vmip-', uniqueString(resourceGroup().id))]",
         "resourceGroupName": "[resourceGroup().name]",
-        "scriptName": "lsprovision.sh",
+        "scriptName": "provision-script.sh",
         "customScriptCommand": "su -c'sh ",
         "scriptClose": "'"
     },
@@ -248,7 +248,7 @@
                 "autoUpgradeMinorVersion": true,
                 "settings": {
                     "fileUris": [
-                        "https://experienceazure.blob.core.windows.net/templates/linux-migration/scripts/lsprovision.sh"
+                        "https://raw.githubusercontent.com/stuartatmicrosoft/RedHatSummit2019/master/provision-scripts/provision-script.sh"
                     ],
                     "commandToExecute": "[concat(variables('customScriptCommand'),' ',variables('scriptName'),' ',parameters('azureUserName'),' ',parameters('azureUserPassword'),' ',variables('tenantId'),' ',variables('subscriptionId'),' ',parameters('applicationDisplayName'),' ',parameters('applicationSecretKey'),' ',parameters('applicationObjectId'),' ',parameters('applicationAppId'),' ',variables('scriptClose'))]"
                 }
