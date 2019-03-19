@@ -7,14 +7,14 @@
   connection: local
   tasks:
 
-  - name: First make sure resource group is empty
-    azure_rm_resourcegroup:
-      name: "{{ resource_group }}"
-      location: "{{ location }}"
-      force: yes
-      state: absent
-
-  - name: Create a new resource group
-    azure_rm_resourcegroup:
-      name: "{{ resource_group }}"
-      location: "{{ location }}"
+#  - name: First make sure resource group is empty
+#    azure_rm_resourcegroup:
+#      name: "{{ resource_group }}"
+#      location: "{{ location }}"
+#      force: yes
+#      state: absent
+#
+#  - name: Create a new resource group
+#    azure_rm_resourcegroup:
+#      name: "{{ resource_group }}"
+#      location: "{{ location }}"

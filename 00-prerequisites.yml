@@ -8,29 +8,29 @@
   hosts: localhost
   connection: local
   tasks:
-    - name: First make sure resource group is empty
-      azure_rm_resourcegroup:
-        name: "{{ resource_group }}"
-        location: "{{ location }}"
-        force: yes
-        state: absent
-
-    - name: Create a new resource group
-      azure_rm_resourcegroup:
-        name: "{{ resource_group }}"
-        location: "{{ location }}"
+#    - name: First make sure resource group is empty
+#      azure_rm_resourcegroup:
+#        name: "{{ resource_group }}"
+#        location: "{{ location }}"
+#        force: yes
+#        state: absent
+#
+#    - name: Create a new resource group
+#      azure_rm_resourcegroup:
+#        name: "{{ resource_group }}"
+#        location: "{{ location }}"
 
     - name: Create Virtual Network
       azure_rm_virtualnetwork:
         resource_group: '{{ resource_group }}'
         name: "{{ vnet_name }}"
-        address_prefixes: "10.10.0.0/16"
+        address_prefixes: "10.20.0.0/16"
 
     - name: Create Subnet
       azure_rm_subnet:
         resource_group: '{{ resource_group }}'
         name: "{{ subnet_name }}"
-        address_prefix: "10.10.0.0/24"
+        address_prefix: "10.20.0.0/24"
         virtual_network: "{{ vnet_name }}"
       register: subnet_output
 
