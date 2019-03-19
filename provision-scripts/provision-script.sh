@@ -77,6 +77,13 @@ echo "**************************************************************************
         pip install pyOpenSSL >> /root/pip-output.log
         pip install ansible==2.7.9 >> /root/pip-output.log
 echo "********************************************************************************************"
+	echo "`date` -- Editing student's .bashrc" >> /root/provision-script-output.log
+	echo " " >> /home/student/.bashrc
+        echo "# Azure Service Principal Credentials" >> /home/student/.bashrc
+	echo "export AZURE_CLIENT_ID=" >> /home/student/.bashrc
+	echo "export AZURE_SECRET=" >> /home/student/.bashrc
+	echo "export AZURE_SUBSCRIPTION_ID=" >> /home/student/.bashrc
+	echo "export AZURE_TENANT=" >> /home/student/.bashrc
 
 echo "`date` --END-- Provisioning" >>/root/provision-script-output.log
 
