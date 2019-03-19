@@ -21,7 +21,7 @@
       "value": "ansible-azure-nsg"
     },
     "adminPassword": {
-      "value": "Ansible12345%"
+      "value": "blahblah12345%"
     },
     "addressPrefix": {
       "value": "10.100.0.0/16"
