@@ -12,9 +12,9 @@ SP_APP_ID=${8}
 echo "`date` --BEGIN-- Provision Stage 1 Script" >>/root/lsprovision.log
 echo "********************************************************************************************"
 	echo "`date` -- Setting Time Zone" >>/root/lsprovision.log
-	date >>/root/lsprovision.log
+	echo "`date`" >>/root/lsprovision.log
 	timedatectl set-timezone America/New_York >>/root/lsprovision.log
-	date >>/root/lsprovision.log
+	echo "`date`" >>/root/lsprovision.log
 echo "********************************************************************************************"
 	echo "`date` -- Setting Student User password to 'Microsoft'" >>/root/lsprovision.log
 	echo "Microsoft" | passwd --stdin student
@@ -28,8 +28,8 @@ echo "**************************************************************************
 	echo "`date` -- Adding 'deltarpm' and other required RPMs" >>/root/lsprovision.log
 	yum -y install deltarpm
 	wget http://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
-	yum -y localinstall epel-release-latest-7.noarch.rpm
-	yum -y install policycoreutils-python libsemanage-devel gcc gcc-c++ kernel-devel python-devel libxslt-devel libffi-devel openssl-devel python2-pip iptables-services git
+	yum -y localinstall epel-release-latest-7.noarch.rpm >> /root/lsprovision.log
+	yum -y install policycoreutils-python libsemanage-devel gcc gcc-c++ kernel-devel python-devel libxslt-devel libffi-devel openssl-devel python2-pip iptables-services git >> /root/lsprovision.log
 echo "********************************************************************************************"
 	echo "`date` -- Securing host and changing default SSH port to 2112" >>/root/lsprovision.log
 	sed -i "s/dport 22/dport 2112/g" /etc/sysconfig/iptables
@@ -43,13 +43,13 @@ echo "**************************************************************************
 	systemctl start iptables
 echo "********************************************************************************************"
 	echo "`date` -- Adding package elements to enable graphical interface" >>/root/lsprovision.log
-	yum -y groupinstall "Server with GUI"
+	yum -y groupinstall "Server with GUI" >> /root/lsprovision.log
 echo "********************************************************************************************"
 	echo "`date` -- Setting default systemd target to graphical.target" >>/root/lsprovision.log
-	systemctl set-default graphical.target
+	systemctl set-default graphical.target >> /root/lsprovision.log
 echo "********************************************************************************************"
 	echo "`date` -- Installing noVNC environment" >>/root/lsprovision.log
-	yum -y install novnc python-websockify numpy tigervnc-server
+	yum -y install novnc python-websockify numpy tigervnc-server >> /root/lsprovision.log
         wget --quiet -P /etc/systemd/system https://raw.githubusercontent.com/stuartatmicrosoft/RedHatSummit2019/master/provision-scripts/websockify.service
 	wget --quiet --no-check-certificate -P /etc/systemd/system "https://raw.githubusercontent.com/stuartatmicrosoft/RedHatSummit2019/master/provision-scripts/vncserver@:4.service"
 	openssl req -x509 -nodes -newkey rsa:2048 -keyout /etc/pki/tls/certs/novnc.pem -out /etc/pki/tls/certs/novnc.pem -days 365 -subj "/C=US/ST=Michigan/L=Ann Arbor/O=Lift And Shift/OU=AzureAnsible/CN=itscloudy.af"
@@ -64,7 +64,9 @@ echo "**************************************************************************
         systemctl enable websockify.service
         systemctl start vncserver@:4.service
 	systemctl start websockify.service
-echo "`date` --END-- Provision Stage 1 Script" >>/root/lsprovision.log
+echo "`date` --END-- Provisioning" >>/root/lsprovision.log
+
+echo "`date` Creating Student Desktop Credentials File" >>/root/lsprovision.log
 
 echo AZ_USER_NAME=$AZ_USER_NAME >> /home/student/Desktop/credentials.txt
 echo AZ_USER_PASSWORD=$AZ_USER_PASSWORD >> /home/student/Desktop/credentials.txt
@@ -77,3 +79,4 @@ echo SP_APP_ID=$SP_APP_ID >> /home/student/Desktop/credentials.txt
 echo GUIDE_URL=https://github.com/stuartatmicrosoft/RedHatSummit2019 >> /home/student/Desktop/credentials.txt
 chown student:student /home/student/Desktop/credentials.txt
 
+echo "`date` --END-- Provision Script" >>/root/lsprovision.log
