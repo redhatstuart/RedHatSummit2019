@@ -3,25 +3,25 @@
   "contentVersion": "1.0.0.0",
   "parameters": {
     "virtualMachineName": {
-      "value": "liftshift-source-vm"
+      "value": "ansible-azure-vm"
     },
     "virtualMachineSize": {
-      "value": "Standard_E4_v3"
+      "value": "Standard_D4s_v3"
     },
     "adminUsername": {
-      "value": "lsadmin"
+      "value": "msadmin"
     },
     "virtualNetworkName": {
-      "value": "liftshift-env-vnet"
+      "value": "ansible-azure-vnet"
     },
     "networkInterfaceName": {
-      "value": "liftshift-source-vm-nic"
+      "value": "ansible-azure-vm-nic"
     },
     "networkSecurityGroupName": {
-      "value": "liftshift-env-nsg"
+      "value": "ansible-azure-nsg"
     },
     "adminPassword": {
-      "value": "LiftShift123!"
+      "value": "Ansible12345%"
     },
     "addressPrefix": {
       "value": "10.100.0.0/16"
