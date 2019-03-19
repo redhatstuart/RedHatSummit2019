@@ -101,10 +101,10 @@
                 },
                 "storageProfile": {
                     "imageReference": {
-                        "publisher": "OpenLogic",
-                        "offer": "CentOS-LVM",
+                        "publisher": "RedHat",
+                        "offer": "RHEL",
                         "sku": "7-LVM",
-                        "version": "latest"
+                        "version": "7.6.2018103108"
                     },
                     "osDisk": {
                         "createOption": "fromImage",
