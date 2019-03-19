@@ -1,0 +1,19 @@
+---
+resource_group: ansiblefestrg
+location: eastus
+vm_name: ansiblefestvm
+vm_image_name: ansiblefestvmimage
+vmss_name: vmsstest
+admin_username: afaustin #"{{ lookup('env','VMSS_ADMIN_USERNAME') }}"
+admin_password: Password123!! #"{{ lookup('env','VMSS_ADMIN_PASSWORD') }}"
+mysql_username: mmuser
+mysql_password: Testpasswordxyz12!
+mysql_server_name: mmmysqlansiblefestxxxx
+mysql_database_name: mattermost
+appgateway_name: mattermostag
+vnet_name: agvnet
+subnet_name: agsubnet
+
+vm_publicip_name: mmvmpublicipxx
+vmss_publicip_name: vmsspublicipxxy
+appgateway_public_ip_name: appgwpublicipxx
