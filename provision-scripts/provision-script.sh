@@ -12,8 +12,10 @@ echo "**************************************************************************
 	echo "Microsoft" | passwd --stdin root
 echo "********************************************************************************************"
 	echo "`date` -- Adding 'deltarpm' and other required RPMs" >>/root/lsprovision.log
-	yum -y install deltarpm epel-release
-	yum -y install policycoreutils-python libsemanage-devel gcc gcc-c++ kernel-devel python-devel libxslt-devel libffi-devel openssl-devel python2-pip iptables-services
+	yum -y install deltarpm
+	wget http://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+	yum -y localinstall epel-release-latest-7.noarch.rpm
+	yum -y install policycoreutils-python libsemanage-devel gcc gcc-c++ kernel-devel python-devel libxslt-devel libffi-devel openssl-devel python2-pip iptables-services git
 echo "********************************************************************************************"
 	echo "`date` -- Securing host and changing default SSH port to 2112" >>/root/lsprovision.log
 	sed -i "s/dport 22/dport 2112/g" /etc/sysconfig/iptables
