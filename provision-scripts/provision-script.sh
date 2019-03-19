@@ -36,11 +36,11 @@ echo "**************************************************************************
 echo "********************************************************************************************"
 	echo "`date` -- Installing noVNC environment" >>/root/lsprovision.log
 	yum -y install novnc python-websockify numpy tigervnc-server
-        wget --quiet -P /etc/systemd/system https://raw.githubusercontent.com/stuartatmicrosoft/Azure-Linux-Migration-Workshop/master/provision-scripts/websockify.service
-	wget --quiet --no-check-certificate -P /etc/systemd/system "https://raw.githubusercontent.com/stuartatmicrosoft/Azure-Linux-Migration-Workshop/master/provision-scripts/vncserver@:4.service"
-	openssl req -x509 -nodes -newkey rsa:2048 -keyout /etc/pki/tls/certs/novnc.pem -out /etc/pki/tls/certs/novnc.pem -days 365 -subj "/C=US/ST=Michigan/L=Ann Arbor/O=Lift And Shift/OU=Lift And Shift/CN=stkirk.cloud"
+        wget --quiet -P /etc/systemd/system https://raw.githubusercontent.com/stuartatmicrosoft/RedHatSummit2019/master/provision-scripts/websockify.service
+	wget --quiet --no-check-certificate -P /etc/systemd/system "https://raw.githubusercontent.com/stuartatmicrosoft/RedHatSummit2019/master/provision-scripts/vncserver@:4.service"
+	openssl req -x509 -nodes -newkey rsa:2048 -keyout /etc/pki/tls/certs/novnc.pem -out /etc/pki/tls/certs/novnc.pem -days 365 -subj "/C=US/ST=Michigan/L=Ann Arbor/O=Lift And Shift/OU=AzureAnsible/CN=itscloudy.af"
 	su -c "mkdir .vnc" - student
-	wget --quiet --no-check-certificate -P /home/student/.vnc https://raw.githubusercontent.com/stuartatmicrosoft/Azure-Linux-Migration-Workshop/master/provision-scripts/passwd
+	wget --quiet --no-check-certificate -P /home/student/.vnc https://raw.githubusercontent.com/stuartatmicrosoft/RedHatSummit2019/master/provision-scripts/passwd
         chown student:student /home/student/.vnc/passwd
         chmod 600 /home/student/.vnc/passwd
 	iptables -I INPUT 1 -m tcp -p tcp --dport 6080 -j ACCEPT
