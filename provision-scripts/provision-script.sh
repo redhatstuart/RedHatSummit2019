@@ -45,7 +45,7 @@ echo "**************************************************************************
 	echo "`date` -- Installing the Azure Linux CLI" >>/root/provision-script-output.log
 	rpm --import https://packages.microsoft.com/keys/microsoft.asc
 	sh -c 'echo -e "[azure-cli]\nname=Azure CLI\nbaseurl=https://packages.microsoft.com/yumrepos/azure-cli\nenabled=1\ngpgcheck=1\ngpgkey=https://packages.microsoft.com/keys/microsoft.asc" > /etc/yum.repos.d/azure-cli.repo'
-	yum install azure-cli >> /root/yum-output.log
+	yum -y install azure-cli >> /root/yum-output.log
 echo "********************************************************************************************"	
 	echo "`date` -- Adding package elements to enable graphical interface" >>/root/provision-script-output.log
 	yum -y groupinstall "Server with GUI" >> /root/yum-output.log
@@ -77,13 +77,14 @@ echo "**************************************************************************
         pip install pyOpenSSL >> /root/pip-output.log
         pip install ansible==2.7.9 >> /root/pip-output.log
 echo "********************************************************************************************"
-	echo "`date` -- Editing student's .bashrc" >> /root/provision-script-output.log
+	echo "`date` -- Editing student's .bashrc and disabling Red Hat alerts" >> /root/provision-script-output.log
 	echo " " >> /home/student/.bashrc
         echo "# Azure Service Principal Credentials" >> /home/student/.bashrc
 	echo "export AZURE_CLIENT_ID=" >> /home/student/.bashrc
 	echo "export AZURE_SECRET=" >> /home/student/.bashrc
 	echo "export AZURE_SUBSCRIPTION_ID=" >> /home/student/.bashrc
 	echo "export AZURE_TENANT=" >> /home/student/.bashrc
+        su -c "gconftool-2 -t bool -s /apps/rhsm-icon/hide_icon true" - student
 
 echo "`date` --END-- Provisioning" >>/root/provision-script-output.log
 
