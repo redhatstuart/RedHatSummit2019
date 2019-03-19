@@ -11,6 +11,11 @@ SP_APP_ID=${8}
 
 echo "`date` --BEGIN-- Provision Stage 1 Script" >>/root/lsprovision.log
 echo "********************************************************************************************"
+	echo "`date` -- Setting Time Zone" >>/root/lsprovision.log
+	date >>/root/lsprovision.log
+	timedatectl set-timezone America/New_York >>/root/lsprovision.log
+	date >>/root/lsprovision.log
+echo "********************************************************************************************"
 	echo "`date` -- Setting Student User password to 'Microsoft'" >>/root/lsprovision.log
 	echo "Microsoft" | passwd --stdin student
 echo "********************************************************************************************"
