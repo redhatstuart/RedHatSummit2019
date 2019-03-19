@@ -205,7 +205,7 @@
                         }
                     },
                     {
-                        "name": "default-allow-rdp",
+                        "name": "default-allow-SSH2112",
                         "properties": {
                             "priority": 1010,
                             "protocol": "Tcp",
@@ -218,7 +218,7 @@
                         }
                     },
                     {
-                        "name": "default-allow-http",
+                        "name": "default-allow-noVNC",
                         "properties": {
                             "priority": 1020,
                             "protocol": "Tcp",
