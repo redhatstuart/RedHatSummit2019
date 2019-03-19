@@ -40,7 +40,17 @@ echo "**************************************************************************
 	systemctl disable firewalld
 	systemctl mask firewalld
 	systemctl enable iptables
-	systemctl start iptables
+	systemctl start iptables	
+echo "********************************************************************************************"	
+	echo "`date` -- Installing the Azure Linux CLI" >>/root/lsprovision.log
+	rpm --import https://packages.microsoft.com/keys/microsoft.asc
+	sh -c 'echo -e "[azure-cli]\nname=Azure CLI\nbaseurl=https://packages.microsoft.com/yumrepos/azure-cli\nenabled=1\ngpgcheck=1\ngpgkey=https://packages.microsoft.com/keys/microsoft.asc" > /etc/yum.repos.d/azure-cli.repo'
+	yum install azure-cli  >> /root/lsprovision.log
+echo "********************************************************************************************"	
+	echo "`date` -- Upgrading PIP and installing Ansible" >>/root/lsprovision.log
+	pip install --upgrade pip >>/root/lsprovision.log
+	pip install --upgrade python-dateutil >>/root/lsprovision.log
+	pip install ansible==2.7.9 >>/root/lsprovision.log
 echo "********************************************************************************************"
 	echo "`date` -- Adding package elements to enable graphical interface" >>/root/lsprovision.log
 	yum -y groupinstall "Server with GUI" >> /root/lsprovision.log
