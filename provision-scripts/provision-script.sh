@@ -48,9 +48,11 @@ echo "**************************************************************************
 	yum install azure-cli >> /root/yum-output.log
 echo "********************************************************************************************"	
 	echo "`date` -- Upgrading PIP and installing Ansible" >>/root/provision-script-output.log
-	pip install --upgrade pip >>/root/provision-script-output.log
-	pip install --upgrade python-dateutil >>/root/provision-script-output.log
-	pip install ansible==2.7.9 >>/root/provision-script-output.log
+	pip install --upgrade pip >> /root/pip-output.log
+	pip install --upgrade python-dateutil >> /root/pip-output.log
+	yum -y remove pyOpenSSL rhn-check rhn-client-tools rhn-setup rhn-setup-gnome rhnlib rhnsd yum-rhn-plugin >>/root/yum-output.log
+	pip install pyOpenSSL >> /root/pip-output.log
+	pip install ansible==2.7.9 >> /root/pip-output.log
 echo "********************************************************************************************"
 	echo "`date` -- Adding package elements to enable graphical interface" >>/root/provision-script-output.log
 	yum -y groupinstall "Server with GUI" >> /root/yum-output.log
