@@ -9,29 +9,29 @@ SP_SECRET=${6}
 SP_OBJECT_ID=${7}
 SP_APP_ID=${8}
 
-echo "`date` --BEGIN-- Provision Stage 1 Script" >>/root/lsprovision.log
+echo "`date` --BEGIN-- Provision Stage 1 Script" >>/root/provision-script-output.log
 echo "********************************************************************************************"
-	echo "`date` -- Setting Time Zone" >>/root/lsprovision.log
-	echo "`date`" >>/root/lsprovision.log
-	timedatectl set-timezone America/New_York >>/root/lsprovision.log
-	echo "`date`" >>/root/lsprovision.log
+	echo "`date` -- Setting Time Zone" >>/root/provision-script-output.log
+	echo "`date`" >>/root/provision-script-output.log
+	timedatectl set-timezone America/New_York >>/root/provision-script-output.log
+	echo "`date`" >>/root/provision-script-output.log
 echo "********************************************************************************************"
-	echo "`date` -- Setting Student User password to 'Microsoft'" >>/root/lsprovision.log
+	echo "`date` -- Setting Student User password to 'Microsoft'" >>/root/provision-script-output.log
 	echo "Microsoft" | passwd --stdin student
 echo "********************************************************************************************"
-	echo "`date` -- Adding student to wheel group for sudo access'" >>/root/lsprovision.log
+	echo "`date` -- Adding student to wheel group for sudo access'" >>/root/provision-script-output.log
 	usermod -G wheel student
 echo "********************************************************************************************"
-	echo "`date` -- Setting Root Password to 'Microsoft'" >>/root/lsprovision.log
+	echo "`date` -- Setting Root Password to 'Microsoft'" >>/root/provision-script-output.log
 	echo "Microsoft" | passwd --stdin root
 echo "********************************************************************************************"
-	echo "`date` -- Adding 'deltarpm' and other required RPMs" >>/root/lsprovision.log
-	yum -y install deltarpm
+	echo "`date` -- Adding 'deltarpm' and other required RPMs" >>/root/provision-script-output.log
+	yum -y install deltarpm >> /root/yum-output.log
 	wget http://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
-	yum -y localinstall epel-release-latest-7.noarch.rpm >> /root/lsprovision.log
-	yum -y install policycoreutils-python libsemanage-devel gcc gcc-c++ kernel-devel python-devel libxslt-devel libffi-devel openssl-devel python2-pip iptables-services git >> /root/lsprovision.log
+	yum -y localinstall epel-release-latest-7.noarch.rpm >> /root/yum-output.log
+	yum -y install policycoreutils-python libsemanage-devel gcc gcc-c++ kernel-devel python-devel libxslt-devel libffi-devel openssl-devel python2-pip iptables-services git >> /root/yum-output.log
 echo "********************************************************************************************"
-	echo "`date` -- Securing host and changing default SSH port to 2112" >>/root/lsprovision.log
+	echo "`date` -- Securing host and changing default SSH port to 2112" >>/root/provision-script-output.log
 	sed -i "s/dport 22/dport 2112/g" /etc/sysconfig/iptables
 	semanage port -a -t ssh_port_t -p tcp 2112
 	sed -i "s/#Port 22/Port 2112/g" /etc/ssh/sshd_config
@@ -42,24 +42,24 @@ echo "**************************************************************************
 	systemctl enable iptables
 	systemctl start iptables	
 echo "********************************************************************************************"	
-	echo "`date` -- Installing the Azure Linux CLI" >>/root/lsprovision.log
+	echo "`date` -- Installing the Azure Linux CLI" >>/root/provision-script-output.log
 	rpm --import https://packages.microsoft.com/keys/microsoft.asc
 	sh -c 'echo -e "[azure-cli]\nname=Azure CLI\nbaseurl=https://packages.microsoft.com/yumrepos/azure-cli\nenabled=1\ngpgcheck=1\ngpgkey=https://packages.microsoft.com/keys/microsoft.asc" > /etc/yum.repos.d/azure-cli.repo'
-	yum install azure-cli  >> /root/lsprovision.log
+	yum install azure-cli >> /root/yum-output.log
 echo "********************************************************************************************"	
-	echo "`date` -- Upgrading PIP and installing Ansible" >>/root/lsprovision.log
-	pip install --upgrade pip >>/root/lsprovision.log
-	pip install --upgrade python-dateutil >>/root/lsprovision.log
-	pip install ansible==2.7.9 >>/root/lsprovision.log
+	echo "`date` -- Upgrading PIP and installing Ansible" >>/root/provision-script-output.log
+	pip install --upgrade pip >>/root/provision-script-output.log
+	pip install --upgrade python-dateutil >>/root/provision-script-output.log
+	pip install ansible==2.7.9 >>/root/provision-script-output.log
 echo "********************************************************************************************"
-	echo "`date` -- Adding package elements to enable graphical interface" >>/root/lsprovision.log
-	yum -y groupinstall "Server with GUI" >> /root/lsprovision.log
+	echo "`date` -- Adding package elements to enable graphical interface" >>/root/provision-script-output.log
+	yum -y groupinstall "Server with GUI" >> /root/yum-output.log
 echo "********************************************************************************************"
-	echo "`date` -- Setting default systemd target to graphical.target" >>/root/lsprovision.log
-	systemctl set-default graphical.target >> /root/lsprovision.log
+	echo "`date` -- Setting default systemd target to graphical.target" >>/root/provision-script-output.log
+	systemctl set-default graphical.target >> /root/provision-script-output.log
 echo "********************************************************************************************"
-	echo "`date` -- Installing noVNC environment" >>/root/lsprovision.log
-	yum -y install novnc python-websockify numpy tigervnc-server >> /root/lsprovision.log
+	echo "`date` -- Installing noVNC environment" >>/root/provision-script-output.log
+	yum -y install novnc python-websockify numpy tigervnc-server >> /root/yum-output.log
         wget --quiet -P /etc/systemd/system https://raw.githubusercontent.com/stuartatmicrosoft/RedHatSummit2019/master/provision-scripts/websockify.service
 	wget --quiet --no-check-certificate -P /etc/systemd/system "https://raw.githubusercontent.com/stuartatmicrosoft/RedHatSummit2019/master/provision-scripts/vncserver@:4.service"
 	openssl req -x509 -nodes -newkey rsa:2048 -keyout /etc/pki/tls/certs/novnc.pem -out /etc/pki/tls/certs/novnc.pem -days 365 -subj "/C=US/ST=Michigan/L=Ann Arbor/O=Lift And Shift/OU=AzureAnsible/CN=itscloudy.af"
@@ -74,9 +74,9 @@ echo "**************************************************************************
         systemctl enable websockify.service
         systemctl start vncserver@:4.service
 	systemctl start websockify.service
-echo "`date` --END-- Provisioning" >>/root/lsprovision.log
+echo "`date` --END-- Provisioning" >>/root/provision-script-output.log
 
-echo "`date` Creating Student Desktop Credentials File" >>/root/lsprovision.log
+echo "`date` Creating Student Desktop Credentials File" >>/root/provision-script-output.log
 
 echo AZ_USER_NAME=$AZ_USER_NAME >> /home/student/Desktop/credentials.txt
 echo AZ_USER_PASSWORD=$AZ_USER_PASSWORD >> /home/student/Desktop/credentials.txt
@@ -89,4 +89,4 @@ echo SP_APP_ID=$SP_APP_ID >> /home/student/Desktop/credentials.txt
 echo GUIDE_URL=https://github.com/stuartatmicrosoft/RedHatSummit2019 >> /home/student/Desktop/credentials.txt
 chown student:student /home/student/Desktop/credentials.txt
 
-echo "`date` --END-- Provision Script" >>/root/lsprovision.log
+echo "`date` --END-- Provision Script" >>/root/provision-script-output.log
