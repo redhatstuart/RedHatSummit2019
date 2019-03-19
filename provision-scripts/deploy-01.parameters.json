@@ -3,7 +3,7 @@
   "contentVersion": "1.0.0.0",
   "parameters": {
     "virtualMachineName": {
-      "value": "ansible-azure-vm"
+      "value": "ansible-azure"
     },
     "virtualMachineSize": {
       "value": "Standard_D4s_v3"

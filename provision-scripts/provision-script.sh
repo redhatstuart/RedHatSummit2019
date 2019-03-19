@@ -2,9 +2,6 @@
 
 echo "`date` --BEGIN-- Provision Stage 1 Script" >>/root/lsprovision.log
 echo "********************************************************************************************"
-	echo "`date` -- Creating Ansible User" >>/root/lsprovision.log
-	useradd student
-echo "********************************************************************************************"
 	echo "`date` -- Setting Student User password to 'Microsoft'" >>/root/lsprovision.log
 	echo "Microsoft" | passwd --stdin student
 echo "********************************************************************************************"
