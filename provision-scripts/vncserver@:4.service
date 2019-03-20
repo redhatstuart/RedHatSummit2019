@@ -40,7 +40,7 @@ Type=forking
 
 # Clean any existing files in /tmp/.X11-unix environment
 ExecStartPre=/bin/sh -c '/usr/bin/vncserver -kill %i > /dev/null 2>&1 || :'
-ExecStart=/sbin/runuser -l student -c "/usr/bin/vncserver %i -geometry 1280x720 -depth 24"
+ExecStart=/sbin/runuser -l student -c "/usr/bin/vncserver %i -geometry 1600x900 -depth 24"
 PIDFile=/home/student/.vnc/%H%i.pid
 ExecStop=/bin/sh -c '/usr/bin/vncserver -kill %i > /dev/null 2>&1 || :'
 
