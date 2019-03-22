@@ -6,7 +6,7 @@ admin_username: student
 # Mattermost VM Deployment Exercise (01)
 vm_name: mm_master_vm
 admin_password: Password123!!
-vm_publicip_name: mm_vm_publicipxx
+vm_publicip_name: mmmastervmpublicipxx
 
 # Create Azure Managed MySQL Database (PaaS) Exercise (02)
 mysql_username: mmuser
@@ -25,7 +25,7 @@ vmss_publicip_name: mm_vmsspublicipxxy
 appgateway_name: mm_ag
 vnet_name: mm_app_gateway_vnet
 subnet_name: mm_app_gateway_subnet
-appgateway_public_ip_name: mm_app_gatewaypublicipxx
+appgateway_public_ip_name: mmappgatewaypublicipxx
 
 # AKS Lab Exercise
 aks_cluster_name: MY_AKS_CLUSTER
