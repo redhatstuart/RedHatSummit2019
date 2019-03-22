@@ -65,7 +65,7 @@
         "subscriptionId": "[subscription().subscriptionId]",
         "vnetId": "[resourceId(resourceGroup().name,'Microsoft.Network/virtualNetworks', parameters('virtualNetworkName'))]",
         "subnetRef": "[concat(variables('vnetId'), '/subnets/', parameters('subnetName'))]",
-        "jumpVMPublicIpName": "[concat('ansible-azure-vmip-', uniqueString(resourceGroup().id))]",
+        "jumpVMPublicIpName": "[concat('master-vnc-desktop-vmip-', uniqueString(resourceGroup().id))]",
         "resourceGroupName": "[resourceGroup().name]",
         "scriptName": "provision-script.sh",
         "customScriptCommand": "su -c'sh ",

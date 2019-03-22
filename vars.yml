@@ -1,19 +1,21 @@
 ---
-resource_group: ansiblefestrg
-location: eastus
-vm_name: ansiblefestvm
-vm_image_name: ansiblefestvmimage
-vmss_name: vmsstest
-admin_username: afaustin #"{{ lookup('env','VMSS_ADMIN_USERNAME') }}"
-admin_password: Password123!! #"{{ lookup('env','VMSS_ADMIN_PASSWORD') }}"
+resource_group: MY_RESOURCE_GROUP
+aks_azure_dc: MY_AZURE_DATA_CENTER_LOCATION
+aks_cluster_name: MY_AKS_CLUSTER
+aks_dns_prefix: MY_AKS_DNS_PREFIX
+vm_name: mm_master_vm
+vm_image_name: mm_vm_image
+vmss_name: mm_vmss
+admin_username: student
+admin_password: Password123!!
 mysql_username: mmuser
 mysql_password: Testpasswordxyz12!
-mysql_server_name: mmmysqlansiblefestxxxx
+mysql_server_name: mm_mysql_dbxxxx
 mysql_database_name: mattermost
-appgateway_name: mattermostag
-vnet_name: agvnet
-subnet_name: agsubnet
+appgateway_name: mm_ag
+vnet_name: mm_app_gateway_vnet
+subnet_name: mm_app_gateway_subnet
 
-vm_publicip_name: mmvmpublicipxx
-vmss_publicip_name: vmsspublicipxxy
-appgateway_public_ip_name: appgwpublicipxx
+vm_publicip_name: mm_vm_publicipxx
+vmss_publicip_name: mm_vmsspublicipxxy
+appgateway_public_ip_name: mm_app_gatewaypublicipxx

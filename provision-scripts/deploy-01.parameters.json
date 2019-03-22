@@ -3,7 +3,7 @@
   "contentVersion": "1.0.0.0",
   "parameters": {
     "virtualMachineName": {
-      "value": "ansible-azure"
+      "value": "master-vnc-desktop"
     },
     "virtualMachineSize": {
       "value": "Standard_D4s_v3"
@@ -12,13 +12,13 @@
       "value": "student"
     },
     "virtualNetworkName": {
-      "value": "ansible-azure-vnet"
+      "value": "master-vnc-desktop-vnet"
     },
     "networkInterfaceName": {
-      "value": "ansible-azure-vm-nic"
+      "value": "master-vnc-desktop-vm-nic"
     },
     "networkSecurityGroupName": {
-      "value": "ansible-azure-nsg"
+      "value": "master-vnc-desktop-nsg"
     },
     "adminPassword": {
       "value": "blahblah12345%"
