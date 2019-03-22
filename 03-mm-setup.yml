@@ -32,7 +32,7 @@
 
     - name: Download and unpack MatterMost tarball from central repository server
       unarchive:
-        src: "https://wolverine.itscloudy.af/apps/mattermost-4.7.3-linux-amd64.tar.gz"
+        src: "https://releases.mattermost.com/5.9.0/mattermost-5.9.0-linux-amd64.tar.gz"
         dest: "/opt"
         copy: no
 
@@ -65,7 +65,7 @@
 
     - name: Downloading systemd service script for Mattermost
       get_url:
-        url: https://wolverine.itscloudy.af/apps/mattermost.service
+        url: https://raw.githubusercontent.com/stuartatmicrosoft/RedHatSummit2019/master/mattermost.service
         dest: /etc/systemd/system
         mode: 0664
 
