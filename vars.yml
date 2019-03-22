@@ -1,21 +1,31 @@
 ---
+# Multiple Playbooks
 resource_group: MY_RESOURCE_GROUP
-aks_azure_dc: MY_AZURE_DATA_CENTER_LOCATION
-aks_cluster_name: MY_AKS_CLUSTER
-aks_dns_prefix: MY_AKS_DNS_PREFIX
-vm_name: mm_master_vm
-vm_image_name: mm_vm_image
-vmss_name: mm_vmss
 admin_username: student
+
+# Mattermost VM Deployment Exercise (01)
+vm_name: mm_master_vm
 admin_password: Password123!!
+vm_publicip_name: mm_vm_publicipxx
+
+# Create Azure Managed MySQL Database (PaaS) Exercise (02)
 mysql_username: mmuser
 mysql_password: Testpasswordxyz12!
 mysql_server_name: mm_mysql_dbxxxx
 mysql_database_name: mattermost
+
+# Create VM Image Exercise (04)
+vm_image_name: mm_vm_image
+
+# Create Virtual Machine Scale Set Exercise (05)
+vmss_name: mm_vmss
+vmss_publicip_name: mm_vmsspublicipxxy
+
+# Create Azure Application Gateway Exercise (06)
 appgateway_name: mm_ag
 vnet_name: mm_app_gateway_vnet
 subnet_name: mm_app_gateway_subnet
-
-vm_publicip_name: mm_vm_publicipxx
-vmss_publicip_name: mm_vmsspublicipxxy
 appgateway_public_ip_name: mm_app_gatewaypublicipxx
+
+# AKS Lab Exercise
+aks_cluster_name: MY_AKS_CLUSTER
