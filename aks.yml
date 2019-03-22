@@ -7,6 +7,7 @@
     azure_rm_aks:
       name: "{{ aks_cluster_name }}"
       resource_group: "{{ resource_group }}"
+      dns_prefix: "{{ aks_dns_prefix }}"
       linux_profile:
         admin_username:  "{{ admin_username }}"
         ssh_key: "{{ lookup('file', '~/.ssh/id_rsa.pub') }}"

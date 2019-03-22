@@ -29,3 +29,4 @@ appgateway_public_ip_name: mm_app_gatewaypublicipxx
 
 # AKS Lab Exercise
 aks_cluster_name: MY_AKS_CLUSTER
+aks_dns_prefix: MY_AKS_DNS_PREFIX
