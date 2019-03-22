@@ -6,7 +6,7 @@ After=syslog.target network.target
 Type=simple
 WorkingDirectory=/opt/mattermost
 User=mattermost
-ExecStart=/opt/mattermost/bin/platform
+ExecStart=/opt/mattermost/bin/mattermost
 PIDFile=/var/spool/mattermost/pid/master.pid
 LimitNOFILE=49152
 
