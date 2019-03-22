@@ -85,7 +85,7 @@ echo "**************************************************************************
 	echo "export AZURE_SUBSCRIPTION_ID=" >> /home/student/.bashrc
 	echo "export AZURE_TENANT=" >> /home/student/.bashrc
         su -c "gconftool-2 -t bool -s /apps/rhsm-icon/hide_icon true" - student
-	su -c "ssh-keygen -t rsa -q -P '' -f $HOME/.ssh/id_rsa" - student
+	su -c "ssh-keygen -t rsa -q -P '' -f /home/student/.ssh/id_rsa" - student
         mkdir -p /home/student/.local/share/keyrings
 	wget --quiet -P /home/student/.local/share/keyrings https://raw.githubusercontent.com/stuartatmicrosoft/RedHatSummit2019/master/provision-scripts/Default.keyring
         chown student:student /home/student/.local/share/keyrings/Default.keyring
