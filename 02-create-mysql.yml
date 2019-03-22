@@ -10,7 +10,6 @@
       sku:
         name: B_Gen5_1
         tier: Basic
-      location: "{{ location }}"
       enforce_ssl: False
       admin_username: "{{ mysql_username }}"
       admin_password: "{{ mysql_password }}"

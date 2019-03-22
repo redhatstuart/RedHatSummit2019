@@ -11,7 +11,7 @@ vm_publicip_name: mmmastervmpublicipxx
 # Create Azure Managed MySQL Database (PaaS) Exercise (02)
 mysql_username: mmuser
 mysql_password: Testpasswordxyz12!
-mysql_server_name: mm_mysql_dbxxxx
+mysql_server_name: mm-mysql-dbxxxx
 mysql_database_name: mattermost
 
 # Create VM Image Exercise (04)

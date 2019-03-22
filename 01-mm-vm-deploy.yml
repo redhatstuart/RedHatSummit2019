@@ -54,7 +54,6 @@
   - name: Create Mattermost Server & Proxy VM
     azure_rm_virtualmachine:
       admin_username: "{{ admin_username }}"
-      location: '{{ location }}'
       managed_disk_type: Standard_LRS
       name: '{{ vm_name }}'
       network_interface_names: '{{ vm_name }}-nic'
