@@ -4,7 +4,7 @@ resource_group: MY_RESOURCE_GROUP
 admin_username: student
 
 # Mattermost VM Deployment Exercise (01)
-vm_name: mm_master_vm
+vm_name: mm-master-vm
 admin_password: Password123!!
 vm_publicip_name: mmmastervmpublicipxx
 
@@ -15,16 +15,16 @@ mysql_server_name: mm_mysql_dbxxxx
 mysql_database_name: mattermost
 
 # Create VM Image Exercise (04)
-vm_image_name: mm_vm_image
+vm_image_name: mm-vm-image
 
 # Create Virtual Machine Scale Set Exercise (05)
-vmss_name: mm_vmss
-vmss_publicip_name: mm_vmsspublicipxxy
+vmss_name: mm-vmss
+vmss_publicip_name: mmmsspublicipxxy
 
 # Create Azure Application Gateway Exercise (06)
 appgateway_name: mm_ag
-vnet_name: mm_app_gateway_vnet
-subnet_name: mm_app_gateway_subnet
+vnet_name: mm-app-gateway-vnet
+subnet_name: mm-app-gateway-subnet
 appgateway_public_ip_name: mmappgatewaypublicipxx
 
 # AKS Lab Exercise

@@ -6,15 +6,15 @@
   - name: Create Mattermost VNet
     azure_rm_virtualnetwork:
       resource_group: '{{ resource_group }}'
-      name: MMVNet
-      address_prefixes: "10.10.0.0/16"
+      name: mm-vnet
+      address_prefixes: "10.50.0.0/16"
 
   - name: Create Mattermost Subnet
     azure_rm_subnet:
       resource_group: '{{ resource_group }}'
-      name: MMSubnet
-      address_prefix: "10.10.0.0/24"
-      virtual_network: MMVNet
+      name: mm-subnet
+      address_prefix: "10.50.0.0/24"
+      virtual_network: mm-vnet
 
   - name: Create Mattermost Server & Proxy VM Public IP Address
     azure_rm_publicipaddress:
@@ -48,8 +48,8 @@
       public_ip_address_name: '{{ vm_publicip_name }}'
       resource_group: '{{ resource_group }}'
       security_group_name: '{{ vm_name }}-nsg'
-      subnet_name: MMSubnet
-      virtual_network_name: MMVnet
+      subnet_name: mm-subnet
+      virtual_network_name: mm-vnet 
 
   - name: Create Mattermost Server & Proxy VM
     azure_rm_virtualmachine:
