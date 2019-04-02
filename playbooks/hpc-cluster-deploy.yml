@@ -1,21 +1,8 @@
-- name: Deploy Deep Learning VM
+- name: Deploy HPC Master Node and Network Infrastructure
   hosts: localhost
   connection: local
 
   tasks:
-
-  - name: Determine Date/Time stamp
-    command: "date +%m%d%H%S"
-    register: dateoutput
-
-  - name: Setting Date/Time stamp to a variable
-    set_fact:
-      datestamp: "{{ dateoutput.stdout }}"
-
-#  - name: Make sure Deep Learning VM Resource Group Exists
-#    azure_rm_resourcegroup:
-#      name: "{{ resource_group }}"
-#      location: "{{ location }}"
 
   - name: Create HPC vNet
     azure_rm_virtualnetwork:
@@ -26,14 +13,14 @@
   - name: Create HPC Infrastructure Subnet
     azure_rm_subnet:
       resource_group: "{{ resource_group }}"
-      name: "{{ vm_name }}-infra-subnet"
+      name: "{{ vm_name }}-hpc-infra-subnet"
       address_prefix: "10.10.50.0/24"
       virtual_network: "{{ vm_name }}-hpc-vnet"
 
   - name: Create HPC Compute Subnet
     azure_rm_subnet:
       resource_group: "{{ resource_group }}"
-      name: "{{ vm_name }}-compute-subnet"
+      name: "{{ vm_name }}-hpc-compute-subnet"
       address_prefix: "10.10.55.0/24"
       virtual_network: "{{ vm_name }}-hpc-vnet"
 
@@ -42,9 +29,9 @@
       resource_group: "{{ resource_group }}"
       name: "{{ vm_name }}-hpc-pip"
       allocation_method: Static
-      domain_name: "{{ vm_name }}-hpc-{{ datestamp }}"
+      domain_name: "{{ vm_name }}-hpc"
 
-  - name: Create Master node NSG
+  - name: Create Master Node NSG
     azure_rm_securitygroup:
       resource_group: "{{ resource_group }}"
       name: "{{ vm_name }}-hpc-nsg"
@@ -62,8 +49,7 @@
       os_type: Linux
       resource_group: "{{ resource_group }}"
       security_group_name: "{{ vm_name }}-hpc-nsg"
-      subnet_name: "{{ vm_name }}-infra-subnet"
-#        publisher: microsoft-ads
+      subnet_name: "{{ vm_name }}-hpc-infra-subnet"
       virtual_network: "{{ vm_name }}-hpc-vnet"
       ip_configurations:
         - name: ipconfig1
@@ -72,10 +58,9 @@
           public_ip_allocation_method: Dynamic
           private_ip_allocation_method: Dynamic
 
-  - name: Create Master HPC InfrastructureNode
+  - name: Create Master HPC Infrastructure Node
     azure_rm_virtualmachine:
       admin_username: "{{ admin_username }}"
-      location: "{{ location }}"
       managed_disk_type: Standard_LRS
       name: "{{ vm_name }}-hpc"
       network_interface_names: "{{ vm_name }}-hpc-nic"
@@ -92,16 +77,182 @@
         publisher: OpenLogic
         sku: 7-LVM
         version: 7.6.20190130
+      data_disks:
+        - lun: 0
+          disk_size_gb: 8 
+          managed_disk_type: Standard_LRS
+        - lun: 1 
+          disk_size_gb: 8
+          managed_disk_type: Standard_LRS
+        - lun: 2 
+          disk_size_gb: 8
+          managed_disk_type: Standard_LRS
+        - lun: 3
+          disk_size_gb: 8
+          managed_disk_type: Standard_LRS
+        - lun: 4
+          disk_size_gb: 8
+          managed_disk_type: Standard_LRS
+        - lun: 5
+          disk_size_gb: 8
+          managed_disk_type: Standard_LRS
+        - lun: 6
+          disk_size_gb: 8
+          managed_disk_type: Standard_LRS
+        - lun: 7
+          disk_size_gb: 8
+          managed_disk_type: Standard_LRS
+        - lun: 8
+          disk_size_gb: 8
+          managed_disk_type: Standard_LRS
+        - lun: 9
+          disk_size_gb: 8
+          managed_disk_type: Standard_LRS
+
+  - name: Getting Public FQDN address of Deep Learning VM
+    azure_rm_publicipaddress_facts:
+      resource_group: "{{ resource_group }}"
+      name: "{{ vm_name }}-hpc-pip"
+    register: output
+
+  - name: Dump Deep Learning VM FQDN
+    debug:
+      msg: "FQDN: {{ output.ansible_facts.azure_publicipaddresses[0].properties.dnsSettings.fqdn }}"
+
+- name: Determine Network Address of Master HPC Infrastructure Node
+  hosts: localhost
+  connection: local
+  tasks:
+
+    - name: Getting Public IP address of Master HPC Infrastructure Node
+      azure_rm_publicipaddress_facts:
+        resource_group: "{{ resource_group }}"
+        name: "{{ vm_name }}-hpc-pip"
+      register: output
+
+    - name: Adding Public IP to Ansible host group
+      add_host:
+        hostname: "{{ output.ansible_facts.azure_publicipaddresses[0].properties.ipAddress }}"
+        groups: masternode
+
+    - name: Setting Public IP variable
+      set_fact:
+        masternode_ip: "{{ output.ansible_facts.azure_publicipaddresses[0].properties.ipAddress }}"  
+
+- name: Configure Master HPC Infrastructure Node
+  hosts: masternode
+  remote_user: "{{ admin_username }}"
+  become: yes  
+  tasks:
+
+    - name: Ensure NFS is installed
+      yum: name=nfs-utils state=installed
+
+    - name: Ensure NFS is enabled
+      systemd: name=nfs-server enabled=yes
+
+    - name: Ensure NFS is started
+      systemd: name=nfs-server state=started
+      ignore_errors: yes
+
+    - name: Creating Partition for RAID drive on LUN 0
+      parted:
+        device: /dev/sdc
+        number: 1
+        state: present
+        flags: [ raid ]
+
+    - name: Creating Partition for RAID drive on LUN 1
+      parted:
+        device: /dev/sdd
+        number: 1
+        state: present
+        flags: [ raid ]
+
+    - name: Creating Partition for RAID drive on LUN 2
+      parted:
+        device: /dev/sde
+        number: 1
+        state: present
+        flags: [ raid ]
+
+    - name: Creating Partition for RAID drive on LUN 3
+      parted:
+        device: /dev/sdf
+        number: 1
+        state: present
+        flags: [ raid ]
+
+    - name: Creating Partition for RAID drive on LUN 4
+      parted:
+        device: /dev/sdg
+        number: 1
+        state: present
+        flags: [ raid ]
+
+    - name: Creating Partition for RAID drive on LUN 5
+      parted:
+        device: /dev/sdh
+        number: 1
+        state: present
+        flags: [ raid ]
+
+    - name: Creating Partition for RAID drive on LUN 6
+      parted:
+        device: /dev/sdi
+        number: 1
+        state: present
+        flags: [ raid ]
+
+    - name: Creating Partition for RAID drive on LUN 7
+      parted:
+        device: /dev/sdj
+        number: 1
+        state: present
+        flags: [ raid ]
+
+    - name: Creating Partition for RAID drive on LUN 8
+      parted:
+        device: /dev/sdk
+        number: 1
+        state: present
+        flags: [ raid ]
+
+    - name: Creating Partition for RAID drive on LUN 9
+      parted:
+        device: /dev/sdl
+        number: 1
+        state: present
+        flags: [ raid ]
+
+    - name: Create RAID 0 Array
+      command: "mdadm --create /dev/md0 --level=0 --raid-devices=10 /dev/sd[c-l]1"
 
 
 
-#  - name: Getting Public FQDN address of Deep Learning VM
-#    azure_rm_publicipaddress_facts:
-#      resource_group: "{{ resource_group }}"
-#      name: "{{ vm_name }}-pip"
-#    register: output
+
+
+
+
+
+
+
+
+
+
+#    - name: Create git clone directory
+#      file:
+#        path: "/home/{{ admin_username }}/repo"
+#        state: directory
 #
-#  - name: Dump Deep Learning VM FQDN
-#    debug:
-#      msg: "FQDN: {{ output.ansible_facts.azure_publicipaddresses[0].properties.dnsSettings.fqdn }}"
-
+#    - name: Clone git repository
+#      git:
+#        repo: "{{ git_repo }}"
+#        dest: "/home/{{ admin_username }}/repo"
+#        clone: yes
+#        force: yes
+#
+#    - name: Run train.py script to generate PKL file
+#      command: "/data/anaconda/envs/py35/bin/python ds_artifacts/train.py" 
+#      args:
+#        chdir: "/home/{{ admin_username }}/repo"
