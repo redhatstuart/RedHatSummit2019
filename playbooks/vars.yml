@@ -32,4 +32,4 @@ aks_cluster_name: MY_AKS_CLUSTER
 aks_dns_prefix: MY_AKS_DNS_PREFIX
 
 # HPC Lab Exercise
-hp_infra_size: Standard_D3_v2
+hp_infra_size: Standard_D4s_v3

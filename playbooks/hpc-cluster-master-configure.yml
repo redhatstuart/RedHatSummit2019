@@ -71,50 +71,8 @@
         state: present
         flags: [ raid ]
 
-    - name: Creating Partition for RAID drive on LUN 4
-      parted:
-        device: /dev/sdg
-        number: 1
-        state: present
-        flags: [ raid ]
-
-    - name: Creating Partition for RAID drive on LUN 5
-      parted:
-        device: /dev/sdh
-        number: 1
-        state: present
-        flags: [ raid ]
-
-    - name: Creating Partition for RAID drive on LUN 6
-      parted:
-        device: /dev/sdi
-        number: 1
-        state: present
-        flags: [ raid ]
-
-    - name: Creating Partition for RAID drive on LUN 7
-      parted:
-        device: /dev/sdj
-        number: 1
-        state: present
-        flags: [ raid ]
-
-    - name: Creating Partition for RAID drive on LUN 8
-      parted:
-        device: /dev/sdk
-        number: 1
-        state: present
-        flags: [ raid ]
-
-    - name: Creating Partition for RAID drive on LUN 9
-      parted:
-        device: /dev/sdl
-        number: 1
-        state: present
-        flags: [ raid ]
-
     - name: Create RAID 0 Array
-      command: "mdadm --create /dev/md0 --level=0 --raid-devices=10 /dev/sdc1 /dev/sdd1 /dev/sde1 /dev/sdf1 /dev/sdg1 /dev/sdh1 /dev/sdi1 /dev/sdj1 /dev/sdk1 /dev/sdl1"
+      command: "mdadm --create /dev/md0 --level=0 --raid-devices=4 /dev/sdc1 /dev/sdd1 /dev/sde1 /dev/sdf1"
       args:
         creates: /dev/md0
 
@@ -141,24 +99,61 @@
       systemd: name=mdmonitor state=started
       ignore_errors: yes
 
-    - name: Create mount point for RAID 0 Array
-      file:
-        path: "/share/data"
-        state: directory
-
-    - name: Adding RAID 0 Array entry to /etc/fstab
-      lineinfile:
-        path: /etc/fstab
-        line: "/dev/md0    /share/data      ext4      defaults     1 2"
-        create: no
-
-    - name: Mount RAID 0 Array at /share/data
+    - name: Mounting /share/data and creating required /etc/fstab entry
       mount:
         path: /share/data
         src: /dev/md0
         fstype: ext4
+        opts: defaults
+        state: mounted
+
+    - name: Creating hpc group
+      group:
+        name: hpc
         state: present
+        gid: 7007
 
+    - name: Creating hpc user
+      user:
+        name: "hpc"
+        comment: "hpcuser"
+        uid: "7007"
+        groups: "hpc"
+        shell: "/bin/bash"
+        home: "/share/home"
 
+    - name: Adding /share/home to /etc/exports
+      lineinfile:
+        dest: /etc/exports
+        state: present
+        line:  '{{ item }}'
+      with_items:
+        - '/share/home   *(rw,async)'
+        - '/share/data   *(rw,async)'
 
+    - name: Re-exporting NFS shares
+      command: "exportfs -rav"
+
+    - name: Allow hpc group to have passwordless sudo
+      lineinfile:
+        dest: /etc/sudoers
+        state: present
+        regexp: '^%hpc'
+        line: '%hpc ALL=(ALL) NOPASSWD: ALL'
+        validate: 'visudo -cf %s'
+
+    - name: Generating SSH keypair for hpc user
+      command: "ssh-keygen -t rsa -q -P '' -f /share/home/.ssh/id_rsa"
+      become: yes
+      become_user: hpc
+      args:
+        creates: /share/home/.ssh/id_rsa.pub
+ 
+    - name: Getting hpc user SSH configuration
+      get_url:
+        url: https://raw.githubusercontent.com/stuartatmicrosoft/RedHatSummit2019/master/hpc-ssh-config
+        dest: /share/home/.ssh/config
+        mode: 0644
+        owner: hpc
+        group: hpc
 

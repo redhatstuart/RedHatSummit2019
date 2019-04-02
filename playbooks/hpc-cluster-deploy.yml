@@ -10,18 +10,11 @@
       name: "{{ vm_name }}-hpc-vnet"
       address_prefixes: "10.10.0.0/16"
 
-  - name: Create HPC Infrastructure Subnet
+  - name: Create HPC Subnet
     azure_rm_subnet:
       resource_group: "{{ resource_group }}"
-      name: "{{ vm_name }}-hpc-infra-subnet"
+      name: "{{ vm_name }}-hpc-subnet"
       address_prefix: "10.10.50.0/24"
-      virtual_network: "{{ vm_name }}-hpc-vnet"
-
-  - name: Create HPC Compute Subnet
-    azure_rm_subnet:
-      resource_group: "{{ resource_group }}"
-      name: "{{ vm_name }}-hpc-compute-subnet"
-      address_prefix: "10.10.55.0/24"
       virtual_network: "{{ vm_name }}-hpc-vnet"
 
   - name: Create Master Node Public IP
@@ -49,7 +42,7 @@
       os_type: Linux
       resource_group: "{{ resource_group }}"
       security_group_name: "{{ vm_name }}-hpc-nsg"
-      subnet_name: "{{ vm_name }}-hpc-infra-subnet"
+      subnet_name: "{{ vm_name }}-hpc-subnet"
       virtual_network: "{{ vm_name }}-hpc-vnet"
       ip_configurations:
         - name: ipconfig1
@@ -90,22 +83,3 @@
         - lun: 3
           disk_size_gb: 8
           managed_disk_type: Standard_LRS
-        - lun: 4
-          disk_size_gb: 8
-          managed_disk_type: Standard_LRS
-        - lun: 5
-          disk_size_gb: 8
-          managed_disk_type: Standard_LRS
-        - lun: 6
-          disk_size_gb: 8
-          managed_disk_type: Standard_LRS
-        - lun: 7
-          disk_size_gb: 8
-          managed_disk_type: Standard_LRS
-        - lun: 8
-          disk_size_gb: 8
-          managed_disk_type: Standard_LRS
-        - lun: 9
-          disk_size_gb: 8
-          managed_disk_type: Standard_LRS
-
