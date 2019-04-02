@@ -1,0 +1,22 @@
+- name: Deploy AKS
+  hosts: localhost
+  connection: local
+
+  tasks:
+  - name: Create a managed Azure Container Services (AKS) instance
+    azure_rm_aks:
+      name: "{{ aks_cluster_name }}"
+      resource_group: "{{ resource_group }}"
+      dns_prefix: "{{ aks_dns_prefix }}"
+      linux_profile:
+        admin_username:  "{{ admin_username }}"
+        ssh_key: "{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
+      service_principal:
+        client_id: "{{ lookup('env', 'AZURE_CLIENT_ID') }}"
+        client_secret: "{{ lookup('env', 'AZURE_SECRET') }}"
+      agent_pool_profiles:
+        - name: default
+          count: 3 
+          vm_size: Standard_D2_v2
+      tags:
+        Environment: Production

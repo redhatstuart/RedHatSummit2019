@@ -1,0 +1,107 @@
+- name: Deploy Deep Learning VM
+  hosts: localhost
+  connection: local
+
+  tasks:
+
+  - name: Determine Date/Time stamp
+    command: "date +%m%d%H%S"
+    register: dateoutput
+
+  - name: Setting Date/Time stamp to a variable
+    set_fact:
+      datestamp: "{{ dateoutput.stdout }}"
+
+#  - name: Make sure Deep Learning VM Resource Group Exists
+#    azure_rm_resourcegroup:
+#      name: "{{ resource_group }}"
+#      location: "{{ location }}"
+
+  - name: Create HPC vNet
+    azure_rm_virtualnetwork:
+      resource_group: "{{ resource_group }}"
+      name: "{{ vm_name }}-hpc-vnet"
+      address_prefixes: "10.10.0.0/16"
+
+  - name: Create HPC Infrastructure Subnet
+    azure_rm_subnet:
+      resource_group: "{{ resource_group }}"
+      name: "{{ vm_name }}-infra-subnet"
+      address_prefix: "10.10.50.0/24"
+      virtual_network: "{{ vm_name }}-hpc-vnet"
+
+  - name: Create HPC Compute Subnet
+    azure_rm_subnet:
+      resource_group: "{{ resource_group }}"
+      name: "{{ vm_name }}-compute-subnet"
+      address_prefix: "10.10.55.0/24"
+      virtual_network: "{{ vm_name }}-hpc-vnet"
+
+  - name: Create Master Node Public IP
+    azure_rm_publicipaddress:
+      resource_group: "{{ resource_group }}"
+      name: "{{ vm_name }}-hpc-pip"
+      allocation_method: Static
+      domain_name: "{{ vm_name }}-hpc-{{ datestamp }}"
+
+  - name: Create Master node NSG
+    azure_rm_securitygroup:
+      resource_group: "{{ resource_group }}"
+      name: "{{ vm_name }}-hpc-nsg"
+      rules:
+          - name: "AllowSSH"
+            access: Allow
+            destination_port_range: 22
+            direction: Inbound
+            priority: 1010
+            protocol: Tcp
+
+  - name: Create Master Node NIC
+    azure_rm_networkinterface:
+      name: "{{ vm_name }}-hpc-nic"
+      os_type: Linux
+      resource_group: "{{ resource_group }}"
+      security_group_name: "{{ vm_name }}-hpc-nsg"
+      subnet_name: "{{ vm_name }}-infra-subnet"
+#        publisher: microsoft-ads
+      virtual_network: "{{ vm_name }}-hpc-vnet"
+      ip_configurations:
+        - name: ipconfig1
+          primary: True
+          public_ip_address_name: "{{ vm_name }}-hpc-pip"
+          public_ip_allocation_method: Dynamic
+          private_ip_allocation_method: Dynamic
+
+  - name: Create Master HPC InfrastructureNode
+    azure_rm_virtualmachine:
+      admin_username: "{{ admin_username }}"
+      location: "{{ location }}"
+      managed_disk_type: Standard_LRS
+      name: "{{ vm_name }}-hpc"
+      network_interface_names: "{{ vm_name }}-hpc-nic"
+      os_type: Linux
+      resource_group: "{{ resource_group }}"
+      short_hostname: "{{ vm_name }}-hpc"
+      vm_size: "{{ hp_infra_size }}"
+      ssh_password_enabled: false
+      ssh_public_keys:
+        - path: /home/{{ admin_username }}/.ssh/authorized_keys
+          key_data: "{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
+      image:
+        offer: CentOS-LVM
+        publisher: OpenLogic
+        sku: 7-LVM
+        version: 7.6.20190130
+
+
+
+#  - name: Getting Public FQDN address of Deep Learning VM
+#    azure_rm_publicipaddress_facts:
+#      resource_group: "{{ resource_group }}"
+#      name: "{{ vm_name }}-pip"
+#    register: output
+#
+#  - name: Dump Deep Learning VM FQDN
+#    debug:
+#      msg: "FQDN: {{ output.ansible_facts.azure_publicipaddresses[0].properties.dnsSettings.fqdn }}"
+

@@ -1,0 +1,107 @@
+# Description
+# ===========
+# This playbook:
+# - cleans up resource group to make sure we start from scratch
+# - creates virtual 
+
+- name: Prerequisites for Ansible Demos
+  hosts: localhost
+  connection: local
+  tasks:
+#    - name: First make sure resource group is empty
+#      azure_rm_resourcegroup:
+#        name: "{{ resource_group }}"
+#        location: "{{ location }}"
+#        force: yes
+#        state: absent
+#
+#    - name: Create a new resource group
+#      azure_rm_resourcegroup:
+#        name: "{{ resource_group }}"
+#        location: "{{ location }}"
+
+    - name: Create Virtual Network
+      azure_rm_virtualnetwork:
+        resource_group: '{{ resource_group }}'
+        name: "{{ vnet_name }}"
+        address_prefixes: "10.20.0.0/16"
+
+    - name: Create Subnet
+      azure_rm_subnet:
+        resource_group: '{{ resource_group }}'
+        name: "{{ subnet_name }}"
+        address_prefix: "10.20.0.0/24"
+        virtual_network: "{{ vnet_name }}"
+      register: subnet_output
+
+    - name: Create a public IP address 
+      azure_rm_publicipaddress:
+        resource_group: "{{ resource_group }}"  
+        allocation_method: Dynamic 
+        name: "{{ appgateway_public_ip_name }}" 
+        domain_name_label: "{{ appgateway_public_ip_name }}"  
+      register: pip_output
+
+    - name: dump public ip configuration
+      debug:
+        var: pip_output
+
+    - name: Create instance of Application Gateway
+      azure_rm_appgateway:
+        resource_group: "{{ resource_group }}"
+        name: "{{ appgateway_name }}"
+        sku:
+          name: standard_small
+          tier: standard
+          capacity: 2
+        ssl_policy:
+          policy_type: predefined
+          policy_name: ssl_policy20150501
+          disabled_ssl_protocols:
+            - tls_v1_0
+          cipher_suites:
+            - tls_ecdhe_ecdsa_with_aes_256_gcm_sha384
+        authentication_certificates:
+          - name: cert1
+            data: "{{ lookup('file', 'cert1.txt') }}"
+        ssl_certificates:
+          - name: cert2
+            password: your-password
+            data: "{{ lookup('file', 'cert2.txt') }}"
+        gateway_ip_configurations:
+          - subnet:
+              id: "{{ subnet_output.state.id }}"
+            name: app_gateway_ip_config
+        frontend_ip_configurations:
+          - public_ip_address: "{{ appgateway_public_ip_name }}"
+            name: sample_gateway_frontend_ip_config
+        frontend_ports:
+          - port: 80
+            name: frontend_port_http
+          #- port: 443
+          #  name: frontend_port_https
+        backend_address_pools:
+          - backend_addresses:
+            #  - ip_address: 10.0.0.4
+            name: test_backend_address_pool
+        backend_http_settings_collection:
+          - port: 8065
+            protocol: http
+            cookie_based_affinity: enabled
+            name: sample_appgateway_http_settings
+        http_listeners:
+          - frontend_ip_configuration: sample_gateway_frontend_ip_config
+            frontend_port: frontend_port_http
+            name: sample_http_listener
+          #- frontend_ip_configuration: sample_gateway_frontend_ip_config
+          #  frontend_port: frontend_port_https
+          #  name: sample_https_listener
+          #  protocol: https
+          #  ssl_certificate: cert2
+        request_routing_rules:
+          - rule_type: Basic
+            backend_address_pool: test_backend_address_pool
+            backend_http_settings: sample_appgateway_http_settings
+            http_listener: sample_http_listener
+            name: rule1
+      register: output
