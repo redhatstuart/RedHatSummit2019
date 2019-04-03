@@ -72,7 +72,7 @@
         flags: [ raid ]
 
     - name: Create RAID 0 Array
-      command: "mdadm --create /dev/md0 --level=0 --raid-devices=4 /dev/sdc1 /dev/sdd1 /dev/sde1 /dev/sdf1"
+      shell: "mdadm --create /dev/md0 --level=0 --raid-devices=4 /dev/sdc1 /dev/sdd1 /dev/sde1 /dev/sdf1"
       args:
         creates: /dev/md0
 
@@ -82,9 +82,10 @@
         dev: /dev/md0
 
     - name: Create mdadm.conf
-      command: "mdadm --detail --scan >> /etc/mdadm.conf"
+      shell: "mdadm --detail --scan >> /etc/mdadm.conf"
       args:
         creates: /etc/mdadm.conf
+        chdir: /etc
 
     - name: Add e-mail contact to mdadm.conf
       lineinfile:
@@ -122,7 +123,7 @@
         shell: "/bin/bash"
         home: "/share/home"
 
-    - name: Adding /share/home to /etc/exports
+    - name: Adding NFS shares to /etc/exports
       lineinfile:
         dest: /etc/exports
         state: present
@@ -132,7 +133,7 @@
         - '/share/data   *(rw,async)'
 
     - name: Re-exporting NFS shares
-      command: "exportfs -rav"
+      shell: "exportfs -rav"
 
     - name: Allow hpc group to have passwordless sudo
       lineinfile:
@@ -152,10 +153,11 @@
     - name: Creating SSH configuration file for hpc user
       lineinfile:
         owner: hpcuser
-        group: users
+        group: hpcuser 
         mode: 0644
-        dest: /home/share/.ssh/config
+        dest: /share/home/.ssh/config
         state: present
+        create: yes
         line: '{{ item }}'
       with_items:
         - 'Host *'
@@ -167,7 +169,8 @@
       copy:
         src: "/share/home/.ssh/id_rsa.pub"
         dest: "/share/home/.ssh/authorized_keys"
+        remote_src: yes
         owner: hpcuser
-        group: users
-        mode: 0644
+        group: hpcuser 
+        mode: preserve
 
