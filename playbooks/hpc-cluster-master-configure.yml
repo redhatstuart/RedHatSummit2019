@@ -101,11 +101,11 @@
 
     - name: Mounting /share/data and creating required /etc/fstab entry
       mount:
-        path: /share/data
-        src: /dev/md0
-        fstype: ext4
-        opts: defaults
-        state: mounted
+        path: "/share/data"
+        src: "/dev/md0"
+        fstype: "ext4"
+        opts: "defaults,nofail"
+        state: "mounted"
 
     - name: Creating hpc group
       group:
@@ -115,8 +115,8 @@
 
     - name: Creating hpc user
       user:
-        name: "hpc"
-        comment: "hpcuser"
+        name: "hpcuser"
+        comment: "hpc user account"
         uid: "7007"
         groups: "hpc"
         shell: "/bin/bash"
@@ -145,14 +145,14 @@
     - name: Generating SSH keypair for hpc user
       command: "ssh-keygen -t rsa -q -P '' -f /share/home/.ssh/id_rsa"
       become: yes
-      become_user: hpc
+      become_user: hpcuser
       args:
         creates: /share/home/.ssh/id_rsa.pub
  
     - name: Creating SSH configuration file for hpc user
       lineinfile:
-        owner: hpc
-        group: hpc
+        owner: hpcuser
+        group: users
         mode: 0644
         dest: /home/share/.ssh/config
         state: present
@@ -162,4 +162,12 @@
         - '    StrictHostKeyChecking no'
         - '    UserKnownHostsFile /dev/null'
         - '    PasswordAuthentication no'
+
+    - name: example copying file with owner and permissions
+      copy:
+        src: "/share/home/.ssh/id_rsa.pub"
+        dest: "/share/home/.ssh/authorized_keys"
+        owner: hpcuser
+        group: users
+        mode: 0644
 
