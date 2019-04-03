@@ -149,11 +149,17 @@
       args:
         creates: /share/home/.ssh/id_rsa.pub
  
-    - name: Getting hpc user SSH configuration
-      get_url:
-        url: https://raw.githubusercontent.com/stuartatmicrosoft/RedHatSummit2019/master/hpc-ssh-config
-        dest: /share/home/.ssh/config
-        mode: 0644
+    - name: Creating SSH configuration file for hpc user
+      lineinfile:
         owner: hpc
         group: hpc
+        mode: 0644
+        dest: /home/share/.ssh/config
+        state: present
+        line: '{{ item }}'
+      with_items:
+        - 'Host *'
+        - '    StrictHostKeyChecking no'
+        - '    UserKnownHostsFile /dev/null'
+        - '    PasswordAuthentication no'
 
