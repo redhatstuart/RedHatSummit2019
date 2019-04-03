@@ -165,7 +165,7 @@
         - '    UserKnownHostsFile /dev/null'
         - '    PasswordAuthentication no'
 
-    - name: example copying file with owner and permissions
+    - name: Adding SSH public key to authorized_keys to enable password-less SSH
       copy:
         src: "/share/home/.ssh/id_rsa.pub"
         dest: "/share/home/.ssh/authorized_keys"
