@@ -89,7 +89,7 @@
       network_interface_names: "{{ vm_name }}-hpc-compute2-nic"
       os_type: Linux
       resource_group: "{{ resource_group }}"
-      short_hostname: "{{ vm_name }}-hpc-compute1"
+      short_hostname: "{{ vm_name }}-hpc-compute2"
       vm_size: "{{ hp_compute_size }}"
       ssh_password_enabled: false
       ssh_public_keys:
@@ -110,7 +110,7 @@
       network_interface_names: "{{ vm_name }}-hpc-compute3-nic"
       os_type: Linux
       resource_group: "{{ resource_group }}"
-      short_hostname: "{{ vm_name }}-hpc-compute1"
+      short_hostname: "{{ vm_name }}-hpc-compute3"
       vm_size: "{{ hp_compute_size }}"
       ssh_password_enabled: false
       ssh_public_keys:

@@ -31,6 +31,8 @@
         name:
           - nfs-utils
           - libsemanage-python
+          - libsemanage-devel
+          - policycoreutils-python
 
     - name: Ensure NFS is enabled
       systemd: name=nfs-server enabled=yes
@@ -145,6 +147,23 @@
         regexp: '^%hpc'
         line: '%hpc ALL=(ALL) NOPASSWD: ALL'
         validate: 'visudo -cf %s'
+
+    - name: Setting /share/home SELinux Context
+      sefcontext:
+         target: "/home/share"
+         setype: user_home_dir_t
+         state: present
+
+    - name: Restoring /share/home SELinux Context
+      command: "restorecon -irRv /share/home"
+
+    - name: Creating hpcuser Ansible temp directory
+      file:
+        path: /share/home/.ansible/tmp
+        state: directory
+        owner: hpcuser
+        group: hpcuser
+        mode: 0700
 
     - name: Generating SSH keypair for hpc user
       command: "ssh-keygen -t rsa -q -P '' -f /share/home/.ssh/id_rsa"
