@@ -26,6 +26,11 @@
 
   tasks:
 
+    - name: Ensure deltapm package is installed
+      yum: 
+        name: deltarpm
+        state: latest
+
     - name: Ensure required RPM packages are installed
       yum:
         name:
@@ -150,23 +155,16 @@
 
     - name: Setting /share/home SELinux Context
       sefcontext:
-         target: "/home/share"
+         target: "/share/home"
          setype: user_home_dir_t
          state: present
 
     - name: Restoring /share/home SELinux Context
       command: "restorecon -irRv /share/home"
 
-    - name: Creating hpcuser Ansible temp directory
-      file:
-        path: /share/home/.ansible/tmp
-        state: directory
-        owner: hpcuser
-        group: hpcuser
-        mode: 0700
-
     - name: Generating SSH keypair for hpc user
       command: "ssh-keygen -t rsa -q -P '' -f /share/home/.ssh/id_rsa"
+      chdir: /share/home
       become: yes
       become_user: hpcuser
       args:

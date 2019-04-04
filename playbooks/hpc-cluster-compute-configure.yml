@@ -53,6 +53,11 @@
   become: yes  
 
   tasks:
+ 
+    - name: Ensure deltapm package is installed
+      yum:
+        name: deltarpm
+        state: latest
 
     - name: Install the EPEL repository
       yum:
@@ -77,11 +82,27 @@
           - libsemanage-python
           - libsemanage-devel
           - policycoreutils-python
+          - rdma
+          - mstflint
+          - libibverbs-utils
+          - infiniband-diags
+          - compat-qpid-cpp-client-devel
+          - compat-qpid-cpp-server
+          - numactl
+
+
+yum install rdma mstflint libibverbs-utils infiniband-diagsy
 
     - name: Install IoZone from the IoZone Source Repository
       yum:
         name: http://www.iozone.org/src/current/iozone-3-487.i386.rpm
         state: present
+
+    - name: Set use_nfs_home_dirs SELinux flag on and keep it persistent across reboots
+      seboolean:
+        name: use_nfs_home_dirs
+        state: yes
+        persistent: yes
 
     - name: Mounting /share/data and creating required /etc/fstab entry
       mount:
@@ -128,4 +149,3 @@
         state: yes
         persistent: yes
 
-    - name: Create /shared/home/hpcnodes 

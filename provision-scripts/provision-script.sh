@@ -76,6 +76,9 @@ echo "**************************************************************************
         yum -y remove pyOpenSSL rhn-check rhn-client-tools rhn-setup rhn-setup-gnome rhnlib rhnsd yum-rhn-plugin PackageKit* subscription-manager >>/root/yum-output.log
         pip install pyOpenSSL >> /root/pip-output.log
         pip install ansible==2.7.9 >> /root/pip-output.log
+        mkdir -p /etc/ansible
+        echo "[ssh_connection]" > /etc/ansible/ansible.cfg
+        echo "ssh_args = -o StrictHostKeyChecking=no" >> /etc/ansible/ansible.cfg
 echo "********************************************************************************************"
 	echo "`date` -- Editing student's .bashrc and disabling Red Hat alerts" >> /root/provision-script-output.log
 	echo " " >> /home/student/.bashrc
