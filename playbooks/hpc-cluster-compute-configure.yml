@@ -74,6 +74,7 @@
           - glusterfs
           - glusterfs-client-xlators
           - glusterfs-fuse 
+          - libsemanage-python
 
     - name: Install IoZone from the IoZone Source Repository
       yum:
