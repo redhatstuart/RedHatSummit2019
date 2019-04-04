@@ -1,0 +1,207 @@
+- name: Deploy HPC Compute Node and Network Infrastructure
+  hosts: localhost
+  connection: local
+
+  tasks:
+
+#  - name: Create HPC vNet
+#    azure_rm_virtualnetwork:
+#      resource_group: "{{ resource_group }}"
+#      name: "{{ vm_name }}-hpc-vnet"
+#      address_prefixes: "10.10.0.0/16"
+#
+#  - name: Create HPC Subnet
+#    azure_rm_subnet:
+#      resource_group: "{{ resource_group }}"
+#      name: "{{ vm_name }}-hpc-subnet"
+#      address_prefix: "10.10.50.0/24"
+#      virtual_network: "{{ vm_name }}-hpc-vnet"
+#
+#  - name: Create Compute Node Public IP
+#    azure_rm_publicipaddress:
+#      resource_group: "{{ resource_group }}"
+#      name: "{{ vm_name }}-hpc-pip"
+#      allocation_method: Static
+#      domain_name: "{{ vm_name }}-hpc"
+#
+#  - name: Create Master Node NSG
+#    azure_rm_securitygroup:
+#      resource_group: "{{ resource_group }}"
+#      name: "{{ vm_name }}-hpc-nsg"
+#      rules:
+#          - name: "AllowSSH"
+#            access: Allow
+#            destination_port_range: 22
+#            direction: Inbound
+#            priority: 1010
+#            protocol: Tcp
+#
+  - name: Create Compute Node 1 NIC
+    azure_rm_networkinterface:
+      name: "{{ vm_name }}-hpc-compute1-nic"
+      enable_accelerated_networking: no
+      os_type: Linux
+      resource_group: "{{ resource_group }}"
+      security_group_name: "{{ vm_name }}-hpc-nsg"
+      subnet_name: "{{ vm_name }}-hpc-subnet"
+      virtual_network: "{{ vm_name }}-hpc-vnet"
+      ip_configurations:
+        - name: ipconfig1
+          primary: True
+          public_ip_address_name: "{{ vm_name }}-hpc-compute1-pip"
+          public_ip_allocation_method: Dynamic
+          private_ip_allocation_method: Dynamic
+
+  - name: Create Compute Node 2 NIC
+    azure_rm_networkinterface:
+      name: "{{ vm_name }}-hpc-compute2-nic"
+      enable_accelerated_networking: no
+      os_type: Linux
+      resource_group: "{{ resource_group }}"
+      security_group_name: "{{ vm_name }}-hpc-nsg"
+      subnet_name: "{{ vm_name }}-hpc-subnet"
+      virtual_network: "{{ vm_name }}-hpc-vnet"
+      ip_configurations:
+        - name: ipconfig1
+          primary: True
+          public_ip_address_name: "{{ vm_name }}-hpc-compute2-pip"
+          public_ip_allocation_method: Dynamic
+          private_ip_allocation_method: Dynamic
+
+  - name: Create Compute Node 3 NIC
+    azure_rm_networkinterface:
+      name: "{{ vm_name }}-hpc-compute3-nic"
+      enable_accelerated_networking: no
+      os_type: Linux
+      resource_group: "{{ resource_group }}"
+      security_group_name: "{{ vm_name }}-hpc-nsg"
+      subnet_name: "{{ vm_name }}-hpc-subnet"
+      virtual_network: "{{ vm_name }}-hpc-vnet"
+      ip_configurations:
+        - name: ipconfig1
+          primary: True
+          public_ip_address_name: "{{ vm_name }}-hpc-compute3-pip"
+          public_ip_allocation_method: Dynamic
+          private_ip_allocation_method: Dynamic
+
+#  - name: Create Load Balancer for HPC Compute Nodes
+#    azure_rm_loadbalancer:
+#      name: "{{ vm_name }}-hpc-loadbalancer"
+#      resource_group: "{{ resource_group }}"
+#      public_ip: "{{ vm_name }}-hpc-vmss-pip"
+#      probe_protocol: Tcp
+#      probe_port: 22
+#      probe_interval: 10
+#      probe_fail_count: 3
+#      protocol: Tcp 
+#      load_distribution: Default
+#      frontend_port: 22
+#      backend_port: 22
+#      idle_timeout: 4
+#      natpool_frontend_port_start: 50000
+#      natpool_frontend_port_end: 50040
+#      natpool_backend_port: 22
+#      natpool_protocol: Tcp
+
+
+#  - name: Create Compute Node HPC Virtual Machine Scale Set
+#    azure_rm_virtualmachine_scaleset:
+#      resource_group: "{{ resource_group }}"
+#      name: "{{ vm_name }}-hpc-vmscaleset"
+#      vm_size: "{{ hp_compute_size }}"
+#      capacity: 3
+#      virtual_network_name: "{{ vm_name }}-hpc-vnet"
+#      subnet_name: "{{ vm_name }}-hpc-subnet"
+#      admin_username: "{{ admin_username }}"
+#      enable_accelerated_networking: no
+#      ssh_password_enabled: false
+#      ssh_public_keys:
+#        - path: /home/{{ admin_username }}/.ssh/authorized_keys
+#          key_data: "{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
+#      upgrade_policy: Manual
+#      managed_disk_type: Standard_LRS
+#      security_group: "{{ vm_name }}-hpc-nsg"
+#      tier: Standard
+#      state: present
+#      os_type: Linux
+#      image:
+#        offer: CentOS-HPC
+#        publisher: OpenLogic
+#        sku: 7.4
+#        version: 7.4.20180719
+#      load_balancer: "{{ vm_name }}-hpc-loadbalancer"
+
+
+  - name: Create an availability set with default options
+    azure_rm_availabilityset:
+      name: "{{ vm_name }}-hpc-availset"
+      sku: Aligned
+      state: present
+      resource_group: "{{ resource_group }}"
+
+  - name: Create HPC Compute Node 1 VM 
+    azure_rm_virtualmachine:
+      availability_set: "{{ vm_name }}-hpc-availset"
+      admin_username: "{{ admin_username }}"
+      managed_disk_type: Standard_LRS
+      name: "{{ vm_name }}-hpc-compute1"
+      network_interface_names: "{{ vm_name }}-hpc-compute1-nic"
+      os_type: Linux
+      resource_group: "{{ resource_group }}"
+      short_hostname: "{{ vm_name }}-hpc-compute1"
+      vm_size: "{{ hp_compute_size }}"
+      ssh_password_enabled: false
+      ssh_public_keys:
+        - path: /home/{{ admin_username }}/.ssh/authorized_keys
+          key_data: "{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
+      image:
+        offer: Centos-HPC
+        publisher: OpenLogic
+        sku: 7.4
+        version: 7.4.20180719
+
+  - name: Create HPC Compute Node 2 VM
+    azure_rm_virtualmachine:
+      availability_set: "{{ vm_name }}-hpc-availset"
+      admin_username: "{{ admin_username }}"
+      managed_disk_type: Standard_LRS
+      name: "{{ vm_name }}-hpc-compute2"
+      network_interface_names: "{{ vm_name }}-hpc-compute2-nic"
+      os_type: Linux
+      resource_group: "{{ resource_group }}"
+      short_hostname: "{{ vm_name }}-hpc-compute1"
+      vm_size: "{{ hp_compute_size }}"
+      ssh_password_enabled: false
+      ssh_public_keys:
+        - path: /home/{{ admin_username }}/.ssh/authorized_keys
+          key_data: "{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
+      image:
+        offer: Centos-HPC
+        publisher: OpenLogic
+        sku: 7.4
+        version: 7.4.20180719
+
+  - name: Create HPC Comptue Node 3 VM
+    azure_rm_virtualmachine:
+      availability_set: "{{ vm_name }}-hpc-availset"
+      admin_username: "{{ admin_username }}"
+      managed_disk_type: Standard_LRS
+      name: "{{ vm_name }}-hpc-compute3"
+      network_interface_names: "{{ vm_name }}-hpc-compute3-nic"
+      os_type: Linux
+      resource_group: "{{ resource_group }}"
+      short_hostname: "{{ vm_name }}-hpc-compute1"
+      vm_size: "{{ hp_compute_size }}"
+      ssh_password_enabled: false
+      ssh_public_keys:
+        - path: /home/{{ admin_username }}/.ssh/authorized_keys
+          key_data: "{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
+      image:
+        offer: Centos-HPC
+        publisher: OpenLogic
+        sku: 7.4
+        version: 7.4.20180719
+
+
+
+

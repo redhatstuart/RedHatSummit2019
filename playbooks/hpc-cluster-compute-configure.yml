@@ -1,0 +1,126 @@
+- name: Determine Network Addresses of HPC Compute Nodes
+  hosts: localhost
+  connection: local
+
+  tasks:
+
+    - name: Getting Public IP address of Compute Node 1
+      azure_rm_publicipaddress_facts:
+        resource_group: "{{ resource_group }}"
+        name: "{{ vm_name }}-hpc-compute1-pip"
+      register: output1
+
+    - name: Getting Public IP address of Compute Node 2
+      azure_rm_publicipaddress_facts:
+        resource_group: "{{ resource_group }}"
+        name: "{{ vm_name }}-hpc-compute2-pip"
+      register: output2
+
+    - name: Getting Public IP address of Compute Node 3
+      azure_rm_publicipaddress_facts:
+        resource_group: "{{ resource_group }}"
+        name: "{{ vm_name }}-hpc-compute3-pip"
+      register: output3
+
+    - name: Getting Private IP address of Master Node
+      azure_rm_networkinterface_facts:
+        resource_group: "{{ resource_group }}"
+        name: "{{ vm_name }}-hpc-master-nic"
+      register: output4
+
+    - name: Adding Public IP of Compute Node 1 to Ansible host group
+      add_host:
+        hostname: "{{ output1.ansible_facts.azure_publicipaddresses[0].properties.ipAddress }}"
+        groups: computenodes
+
+    - name: Adding Public IP of Compute Node 2 to Ansible host group
+      add_host:
+        hostname: "{{ output2.ansible_facts.azure_publicipaddresses[0].properties.ipAddress }}"
+        groups: computenodes
+
+    - name: Adding Public IP of Compute Node 3 to Ansible host group
+      add_host:
+        hostname: "{{ output3.ansible_facts.azure_publicipaddresses[0].properties.ipAddress }}"
+        groups: computenodes
+
+    - name: Setting Private IP variable of Master Node
+      set_fact:
+        masternode_ip: "{{ output4.ansible_facts.azure_networkinterfaces[0].properties.ipConfigurations[0].properties.privateIPAddress }}"
+
+- name: Configure HPC Compute Nodes
+  hosts: computenodes
+  remote_user: "{{ admin_username }}"
+  become: yes  
+
+  tasks:
+
+    - name: Install the EPEL repository
+      yum:
+        name: epel-release
+        state: latest
+
+    - name: Ensure required RPM packages are installed
+      yum: 
+        name:
+          - nfs-utils
+          - psmisc
+          - gcc
+          - gcc-gfortran
+          - gcc-c++
+          - git
+          - automake
+          - bonnie++
+          - glusterfs-libs
+          - glusterfs
+          - glusterfs-client-xlators
+          - glusterfs-fuse 
+
+    - name: Install IoZone from the IoZone Source Repository
+      yum:
+        name: http://www.iozone.org/src/current/iozone-3-487.i386.rpm
+        state: present
+
+    - name: Mounting /share/data and creating required /etc/fstab entry
+      mount:
+        path: "/share/data"
+        src: "{{ hostvars['localhost']['masternode_ip'] }}:/share/data"
+        fstype: "nfs"
+        opts: "defaults,nofail"
+        state: "mounted"
+
+    - name: Mounting /share/home and creating required /etc/fstab entry
+      mount:
+        path: "/share/home"
+        src: "{{ hostvars['localhost']['masternode_ip'] }}:/share/home"
+        fstype: "nfs"
+        opts: "defaults,nofail"
+        state: "mounted"
+
+    - name: Creating hpc group
+      group:
+        name: hpc
+        state: present
+        gid: 7007
+
+    - name: Creating hpc user
+      user:
+        name: "hpcuser"
+        comment: "hpc user account"
+        uid: "7007"
+        groups: "hpc"
+        shell: "/bin/bash"
+        home: "/share/home"
+
+    - name: Allow hpc group to have passwordless sudo
+      lineinfile:
+        dest: /etc/sudoers
+        state: present
+        regexp: '^%hpc'
+        line: '%hpc ALL=(ALL) NOPASSWD: ALL'
+        validate: 'visudo -cf %s'
+
+    - name: Set use_nfs_home_dirs SELinux flag on and keep it persistent across reboots
+      seboolean:
+        name: use_nfs_home_dirs
+        state: yes
+        persistent: yes

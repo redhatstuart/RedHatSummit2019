@@ -7,7 +7,7 @@
     - name: Getting Public IP address of Master HPC Infrastructure Node
       azure_rm_publicipaddress_facts:
         resource_group: "{{ resource_group }}"
-        name: "{{ vm_name }}-hpc-pip"
+        name: "{{ vm_name }}-hpc-master-pip"
       register: output
 
     - name: Adding Public IP to Ansible host group
@@ -26,8 +26,11 @@
 
   tasks:
 
-    - name: Ensure NFS is installed
-      yum: name=nfs-utils state=installed
+    - name: Ensure required RPM packages are installed
+      yum:
+        name:
+          - nfs-utils
+          - libsemanage-python
 
     - name: Ensure NFS is enabled
       systemd: name=nfs-server enabled=yes
@@ -173,4 +176,10 @@
         owner: hpcuser
         group: hpcuser 
         mode: preserve
+
+    - name: Set use_nfs_home_dirs SELinux flag on and keep it persistent across reboots
+      seboolean:
+        name: use_nfs_home_dirs
+        state: yes
+        persistent: yes
 
