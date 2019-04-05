@@ -184,7 +184,7 @@
         validate: 'visudo -cf %s'
 
 
-- name: Configure HPC Compute Nodes
+- name: Configure MPIO using master node
   hosts: masternode
   remote_user: "{{ admin_username }}"
   become: yes
