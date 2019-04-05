@@ -133,6 +133,12 @@
         shell: "/bin/bash"
         home: "/share/home"
 
+    - name: Setting /share/home SELinux Context
+      sefcontext:
+         target: "/share/home"
+         setype: "user_home_dir_t"
+         state: "present"
+
     - name: Adding NFS shares to /etc/exports
       lineinfile:
         dest: /etc/exports
@@ -153,22 +159,21 @@
         line: '%hpc ALL=(ALL) NOPASSWD: ALL'
         validate: 'visudo -cf %s'
 
-    - name: Setting /share/home SELinux Context
-      sefcontext:
-         target: "/share/home"
-         setype: user_home_dir_t
-         state: present
-
-    - name: Restoring /share/home SELinux Context
-      command: "restorecon -irRv /share/home"
+    - name: Creating /share/home/.ansible/tmp
+      file:
+        path: /share/home/.ansible/tmp
+        state: directory
+        owner: hpcuser       
+        group: hpcuser
+        mode: 0755
 
     - name: Generating SSH keypair for hpc user
       command: "ssh-keygen -t rsa -q -P '' -f /share/home/.ssh/id_rsa"
-      chdir: /share/home
       become: yes
       become_user: hpcuser
       args:
         creates: /share/home/.ssh/id_rsa.pub
+        chdir: /share/home
  
     - name: Creating SSH configuration file for hpc user
       lineinfile:
@@ -194,9 +199,20 @@
         group: hpcuser 
         mode: preserve
 
+    - name: Get fullpingpong.sh script
+      get_url:
+        url: https://raw.githubusercontent.com/grandparoach/azure-hpc/Lab/Compute-Grid-Infra/Lab/full-pingpong.sh
+        dest: /share/home/full-pingpong.sh
+        mode: 0755
+        owner: hpcuser
+        group: hpcuser
+
     - name: Set use_nfs_home_dirs SELinux flag on and keep it persistent across reboots
       seboolean:
         name: use_nfs_home_dirs
         state: yes
         persistent: yes
+
+    - name: Restoring /share/home SELinux Context
+      command: "restorecon -irv /share/home"
 
