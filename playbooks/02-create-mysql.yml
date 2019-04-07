@@ -6,7 +6,7 @@
   - name: Create MySQL Server for Mattermost Database
     azure_rm_mysqlserver:
       resource_group: "{{ resource_group }}"
-      name: "{{ vm_name }}-mattermost-mysql"
+      name: "{{ vm_name }}-mattermost-mysql-{{ rnum }}"
       sku:
         name: B_Gen5_1
         tier: Basic
@@ -18,7 +18,7 @@
   - name: Create instance of MySQL Database
     azure_rm_mysqldatabase:
       resource_group: "{{ resource_group }}"
-      server_name: "{{ vm_name }}-mattermost-MySQL"
+      server_name: "{{ vm_name }}-mattermost-mysql-{{ rnum }}"
       name: "{{ mysql_database_name }}"
 
   - name: Getting Public IP address of the application VM

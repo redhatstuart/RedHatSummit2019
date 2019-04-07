@@ -43,7 +43,7 @@
 
   - name: Create Mattermost Server & Proxy VM NIC
     azure_rm_networkinterface:
-      name: '{{ vm_name }}-mattermost-master-nic'
+      name: "{{ vm_name }}-mattermost-master-nic"
       os_type: Linux
       resource_group: '{{ resource_group }}'
       security_group_name: '{{ vm_name }}-mattermost-nsg'
@@ -53,8 +53,8 @@
         - name: ipconfig1
           primary: True
           public_ip_address_name: "{{ vm_name }}-mattermost-master-pip-{{ rnum }}"
-          public_ip_allocation_method: Static
-          private_ip_allocation_method: Static
+          public_ip_allocation_method: Dynamic
+          private_ip_allocation_method: Dynamic
 
 
   - name: Create Mattermost Server & Proxy VM
@@ -62,7 +62,7 @@
       admin_username: "{{ admin_username }}"
       managed_disk_type: Standard_LRS
       name: '{{ vm_name }}-mattermost-master'
-      network_interface_names: '{{ vm_name }}-mattermost-nic'
+      network_interface_names: "{{ vm_name }}-mattermost-master-nic"
       os_type: Linux
       resource_group: '{{ resource_group }}'
       short_hostname: '{{ vm_name }}'

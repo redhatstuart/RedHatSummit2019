@@ -61,7 +61,7 @@
         mode: "g+w"
 
     - name: Configure Mattermost Data Source
-      command: "/bin/sed -i s+:mostest@tcp(dockerhost:3306)/mattermost_test+@{{ vm_name }}-mattermost-mysql:{{ mysql_password }}@tcp({{ vm_name }}-mattermost-mysql.mysql.database.azure.com:3306)/{{ mysql_database_name }}+g /opt/mattermost/config/config.json"
+      command: "/bin/sed -i s+:mostest@tcp(dockerhost:3306)/mattermost_test+@{{ vm_name }}-mattermost-mysql-{{ rnum }}:{{ mysql_password }}@tcp({{ vm_name }}-mattermost-mysql-{{ rnum }}.mysql.database.azure.com:3306)/{{ mysql_database_name }}+g /opt/mattermost/config/config.json"
       args:
         warn: false
 

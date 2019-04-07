@@ -50,29 +50,29 @@
         gateway_ip_configurations:
           - subnet:
               id: "{{ subnet_output.state.id }}"
-            name: Mattermost AG Front-end IP Configuration
+            name: mattermost_ag_ip_configuration
         frontend_ip_configurations:
           - public_ip_address: "{{ vm_name }}-mattermost-ag-pip-{{ rnum }}"
-            name: Mattermost Front-end IP Configuration
+            name: mattermost_ag_front-end_ip_configuration
         frontend_ports:
           - port: 80
             name: frontend_port_http
         backend_address_pools:
           - backend_addresses:
-            name: mattermost_back-end_ip_address_pool
+            name: mattermost_ag_back-end_ip_address_pool
         backend_http_settings_collection:
           - port: 8065
             protocol: http
             cookie_based_affinity: enabled
-            name: Mattermost AG http Configuration
+            name: mattermost_ag_back-end_http_configuration
         http_listeners:
-          - frontend_ip_configuration: sample_gateway_frontend_ip_config
+          - frontend_ip_configuration: mattermost_ag_front-end_ip_configuration 
             frontend_port: frontend_port_http
-            name: Mattermost http listener
+            name: mattermost_ag_http_listener
         request_routing_rules:
           - rule_type: Basic
-            backend_address_pool: test_backend_address_pool
-            backend_http_settings: sample_appgateway_http_settings
-            http_listener: sample_http_listener
-            name: Mattermost Back-end Routing Table
+            backend_address_pool: mattermost_ag_back-end_ip_address_pool
+            backend_http_settings: mattermost_ag_back-end_http_configuration
+            http_listener: mattermost_ag_http_listener
+            name: mattermost_ag_back-end_routing_table
       register: output
