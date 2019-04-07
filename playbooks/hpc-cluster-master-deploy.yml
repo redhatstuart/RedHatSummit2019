@@ -14,15 +14,15 @@
     azure_rm_subnet:
       resource_group: "{{ resource_group }}"
       name: "{{ vm_name }}-hpc-subnet"
-      address_prefix: "10.10.50.0/24"
+      address_prefix: "10.10.100.0/24"
       virtual_network: "{{ vm_name }}-hpc-vnet"
 
   - name: Create Master Node Public IP
     azure_rm_publicipaddress:
       resource_group: "{{ resource_group }}"
-      name: "{{ vm_name }}-hpc-master-pip"
+      name: "{{ vm_name }}-hpc-master-pip-{{ rnum }}"
       allocation_method: Static
-      domain_name: "{{ vm_name }}-master-hpc"
+      domain_name: "{{ vm_name }}-hpc-master-{{ rnum }}"
 
   - name: Create Master Node NSG
     azure_rm_securitygroup:
@@ -47,7 +47,7 @@
       ip_configurations:
         - name: ipconfig1
           primary: True
-          public_ip_address_name: "{{ vm_name }}-hpc-master-pip"
+          public_ip_address_name: "{{ vm_name }}-hpc-master-pip-{{ rnum }}"
           public_ip_allocation_method: Dynamic
           private_ip_allocation_method: Dynamic
 

@@ -1,24 +1,24 @@
-
-- name: Register server
+- name: Determine IP address of Mattermost VM
   hosts: localhost
   connection: local
   vars:
     appserver: mm-app-demo
 
   tasks:
-    - name: Getting Public IP
+    - name: Get Mattermost VM IP Address
       azure_rm_publicipaddress_facts:
         resource_group: "{{ resource_group }}"
-        name: '{{ vm_publicip_name }}'
+        name: "{{ vm_name }}-mattermost-master-pip-{{ rnum }}"
       register: output
 
     - name: Adding public IP to hosts
       add_host:
         hostname: "{{ output.ansible_facts.azure_publicipaddresses[0].properties.ipAddress }}"
-        groups: webservers
+        groups: mmostserver
  
 - name: Install Mattermost Server
-  hosts: webservers
+  hosts: mmostserver
+  remote_user: "{{ admin_username }}"
   become: yes  
   tasks:
     - name: Create Mattermost User
@@ -61,7 +61,9 @@
         mode: "g+w"
 
     - name: Configure Mattermost Data Source
-      command: "/bin/sed -i s+:mostest@tcp(dockerhost:3306)/mattermost_test+@{{ mysql_server_name }}:{{ mysql_password }}@tcp({{ mysql_server_name }}.mysql.database.azure.com:3306)/{{ mysql_database_name }}+g /opt/mattermost/config/config.json"
+      command: "/bin/sed -i s+:mostest@tcp(dockerhost:3306)/mattermost_test+@{{ vm_name }}-mattermost-mysql:{{ mysql_password }}@tcp({{ vm_name }}-mattermost-mysql.mysql.database.azure.com:3306)/{{ mysql_database_name }}+g /opt/mattermost/config/config.json"
+      args:
+        warn: false
 
     - name: Downloading systemd service script for Mattermost
       get_url:

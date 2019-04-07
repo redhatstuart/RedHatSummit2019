@@ -1,29 +1,26 @@
-
----
-- name: Capture VM Image from existing VM
+- name: Generate Disk Image
   hosts: localhost
   connection: local
   tasks:
-    - name: Stop VM before it can be generalized and image captured
+    - name: Stop Mattermost VM as required to generalize
       azure_rm_virtualmachine:
         resource_group: "{{ resource_group }}"
-        name: "{{ vm_name }}"
+        name: "{{ vm_name }}-mattermost-master"
         started: no
 
-    - name: Call REST API - VirtualMachines_Generalize
+    - name: Generalize Mattermost VM using Azure REST API
       azure_rm_resource:
-        # url: /subscriptions/{{ lookup('env','AZURE_SUBSCRIPTION_ID') }}/resourceGroups/{resourceGroupName}/providers/Microsoft.Compute/virtualMachines/{vmName}/generalize
         api_version: '2017-12-01'
         method: POST
         resource_group: "{{ resource_group }}"
         provider: compute
         resource_type: virtualmachines
-        resource_name: "{{ vm_name }}"
+        resource_name: "{{ vm_name }}-mattermost-master"
         subresource:
           - type: generalize
     
-    - name: Create an image from a virtual machine
+    - name: Create a generalized disk image of the Mattermost VM
       azure_rm_image:
         resource_group: "{{ resource_group }}"
-        name: "{{ vm_image_name }}"
-        source: "{{ vm_name }}"
+        name: "{{ vm_name }}-mattermost-disk-image"
+        source: "{{ vm_name }}-mattermost-master"

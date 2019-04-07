@@ -1,4 +1,4 @@
-- name: Deploy Mattermost Infrastructure Virtual Machines
+- name: Deploy Mattermost MySQL PaaS Database
   hosts: localhost
   connection: local
 
@@ -6,7 +6,7 @@
   - name: Create MySQL Server for Mattermost Database
     azure_rm_mysqlserver:
       resource_group: "{{ resource_group }}"
-      name: "{{ mysql_server_name }}"
+      name: "{{ vm_name }}-mattermost-mysql"
       sku:
         name: B_Gen5_1
         tier: Basic
@@ -18,22 +18,22 @@
   - name: Create instance of MySQL Database
     azure_rm_mysqldatabase:
       resource_group: "{{ resource_group }}"
-      server_name: "{{ mysql_server_name }}"
+      server_name: "{{ vm_name }}-mattermost-MySQL"
       name: "{{ mysql_database_name }}"
 
   - name: Getting Public IP address of the application VM
     azure_rm_publicipaddress_facts:
       resource_group: "{{ resource_group }}"
-      name: '{{ vm_publicip_name }}'
+      name: "{{ vm_name }}-mattermost-master-pip-{{ rnum }}"
     register: output
 
-  - name: Call REST API - FirewallRules_CreateOrUpdate
+  - name: Update Firewall Rules using Azure REST API
     azure_rm_resource:
       api_version: '2017-12-01'
       resource_group: "{{ resource_group }}"
       provider: dbformysql
       resource_type: servers
-      resource_name: "{{ mysql_server_name }}"
+      resource_name: '{{ vm_name }}-mattermost-MySQL'
       subresource:
         - type: firewallrules
           name: mattermost

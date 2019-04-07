@@ -1,9 +1,9 @@
 ---
 # Multiple Playbooks
 # CHANGE THE VALUES OF THESE AS APPROPRIATE FOR YOU
-resource_group: MY_RESOURCE_GROUP
+resource_group: MY_RESOURCE_GROUP2
 admin_username: student
-vm_name: MYVM
+vm_name: stuartkirk
 
 # AKS Lab Exercise
 aks_cluster_name: MY_AKS_CLUSTER
@@ -14,16 +14,16 @@ aks_dns_prefix: MY_AKS_DNS_PREFIX
 ###########################################
 
 # Random Generated Number
-rnum: RANDOM
+rnum: 45741
 
 # Mattermost VM Deployment Exercise (01)
 admin_password: Password123!!
-vm_publicip_name: mmmastervmpublicipRANDOM
+vm_publicip_name: mmmastervmpublicip45741
 
 # Create Azure Managed MySQL Database (PaaS) Exercise (02)
 mysql_username: mmuser
 mysql_password: Testpasswordxyz12!
-mysql_server_name: mm-mysql-dbRANDOM
+mysql_server_name: mm-mysql-db45741
 mysql_database_name: mattermost
 
 # Create VM Image Exercise (04)
@@ -31,13 +31,13 @@ vm_image_name: mm-vm-image
 
 # Create Virtual Machine Scale Set Exercise (05)
 vmss_name: mm-vmss
-vmss_publicip_name: mmmsspublicipRANDOM
+vmss_publicip_name: mmmsspublicip45741
 
 # Create Azure Application Gateway Exercise (06)
 appgateway_name: mm_ag
 vnet_name: mm-app-gateway-vnet
 subnet_name: mm-app-gateway-subnet
-appgateway_public_ip_name: mmappgatewaypublicipRANDOM
+appgateway_public_ip_name: mmappgatewaypublicip45741
 
 # HPC Lab Exercise
 hp_infra_size: Standard_D4s_v3

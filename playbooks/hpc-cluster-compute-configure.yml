@@ -7,7 +7,7 @@
     - name: Getting Public IP address of Compute Node 1
       azure_rm_publicipaddress_facts:
         resource_group: "{{ resource_group }}"
-        name: "{{ vm_name }}-hpc-compute1-pip"
+        name: "{{ vm_name }}-hpc-compute1-pip-{{ rnum }}"
       register: output1_pub
 
     - name: Getting Private IP address of Compute Node 1
@@ -19,7 +19,7 @@
     - name: Getting Public IP address of Compute Node 2
       azure_rm_publicipaddress_facts:
         resource_group: "{{ resource_group }}"
-        name: "{{ vm_name }}-hpc-compute2-pip"
+        name: "{{ vm_name }}-hpc-compute2-pip-{{ rnum }}"
       register: output2_pub
 
     - name: Getting Private IP address of Compute Node 2
@@ -31,7 +31,7 @@
     - name: Getting Public IP address of Compute Node 3
       azure_rm_publicipaddress_facts:
         resource_group: "{{ resource_group }}"
-        name: "{{ vm_name }}-hpc-compute3-pip"
+        name: "{{ vm_name }}-hpc-compute3-pip-{{ rnum }}"
       register: output3_pub
 
     - name: Getting Private IP address of Compute Node 3
@@ -43,7 +43,7 @@
     - name: Getting Public IP address of Master Node
       azure_rm_publicipaddress_facts:
         resource_group: "{{ resource_group }}"
-        name: "{{ vm_name }}-hpc-master-pip"
+        name: "{{ vm_name }}-hpc-master-pip-{{ rnum }}"
       register: output4_pub
 
     - name: Getting Private IP address of Master Node
@@ -95,7 +95,7 @@
 
   tasks:
  
-    - name: Ensure deltapm package is installed
+    - name: Ensure deltarpm package is installed
       yum:
         name: deltarpm
         state: latest
@@ -123,20 +123,17 @@
           - libsemanage-python
           - libsemanage-devel
           - policycoreutils-python
-          - rdma
-          - mstflint
-          - qpid-cpp-server
-          - qpid-cpp-server-rdma
-          - qpid-cpp-client
-          - qpid-cpp-client-devel
-          - libibverbs-utils
-          - infiniband-diags
-          - numactl
 
-    - name: Install IoZone from the IoZone Source Repository
-      yum:
-        name: http://www.iozone.org/src/current/iozone-3-487.i386.rpm
-        state: present
+# Removed because A8 and H series do not support SR-IOV with Mellanox adapter
+#          - rdma
+#          - mstflint
+#          - qpid-cpp-server
+#          - qpid-cpp-server-rdma
+#          - qpid-cpp-client
+#          - qpid-cpp-client-devel
+#          - libibverbs-utils
+#          - infiniband-diags
+#          - numactl
 
     - name: Set use_nfs_home_dirs SELinux flag on and keep it persistent across reboots
       seboolean:

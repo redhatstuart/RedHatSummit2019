@@ -16,7 +16,7 @@
       ip_configurations:
         - name: ipconfig1
           primary: True
-          public_ip_address_name: "{{ vm_name }}-hpc-compute1-pip"
+          public_ip_address_name: "{{ vm_name }}-hpc-compute1-pip-{{ rnum }}"
           public_ip_allocation_method: Dynamic
           private_ip_allocation_method: Dynamic
 
@@ -32,7 +32,7 @@
       ip_configurations:
         - name: ipconfig1
           primary: True
-          public_ip_address_name: "{{ vm_name }}-hpc-compute2-pip"
+          public_ip_address_name: "{{ vm_name }}-hpc-compute2-pip-{{ rnum }}"
           public_ip_allocation_method: Dynamic
           private_ip_allocation_method: Dynamic
 
@@ -48,20 +48,20 @@
       ip_configurations:
         - name: ipconfig1
           primary: True
-          public_ip_address_name: "{{ vm_name }}-hpc-compute3-pip"
+          public_ip_address_name: "{{ vm_name }}-hpc-compute3-pip-{{ rnum }}"
           public_ip_allocation_method: Dynamic
           private_ip_allocation_method: Dynamic
 
   - name: Create an availability set with default options
     azure_rm_availabilityset:
-      name: "{{ vm_name }}-hpc-availset"
+      name: "{{ vm_name }}-hpc-availset-{{ rnum }}"
       sku: Aligned
       state: present
       resource_group: "{{ resource_group }}"
 
   - name: Create HPC Compute Node 1 VM 
     azure_rm_virtualmachine:
-      availability_set: "{{ vm_name }}-hpc-availset"
+      availability_set: "{{ vm_name }}-hpc-availset-{{ rnum }}"
       admin_username: "{{ admin_username }}"
       managed_disk_type: Standard_LRS
       name: "{{ vm_name }}-hpc-compute1"
@@ -82,7 +82,7 @@
 
   - name: Create HPC Compute Node 2 VM
     azure_rm_virtualmachine:
-      availability_set: "{{ vm_name }}-hpc-availset"
+      availability_set: "{{ vm_name }}-hpc-availset-{{ rnum }}"
       admin_username: "{{ admin_username }}"
       managed_disk_type: Standard_LRS
       name: "{{ vm_name }}-hpc-compute2"
@@ -103,7 +103,7 @@
 
   - name: Create HPC Comptue Node 3 VM
     azure_rm_virtualmachine:
-      availability_set: "{{ vm_name }}-hpc-availset"
+      availability_set: "{{ vm_name }}-hpc-availset-{{ rnum }}"
       admin_username: "{{ admin_username }}"
       managed_disk_type: Standard_LRS
       name: "{{ vm_name }}-hpc-compute3"

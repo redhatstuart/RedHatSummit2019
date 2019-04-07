@@ -7,7 +7,7 @@
     - name: Getting Public IP address of Master HPC Infrastructure Node
       azure_rm_publicipaddress_facts:
         resource_group: "{{ resource_group }}"
-        name: "{{ vm_name }}-hpc-master-pip"
+        name: "{{ vm_name }}-hpc-master-pip-{{ rnum }}"
       register: output
 
     - name: Adding Public IP to Ansible host group
@@ -26,7 +26,7 @@
 
   tasks:
 
-    - name: Ensure deltapm package is installed
+    - name: Ensure deltarpm package is installed
       yum: 
         name: deltarpm
         state: latest
