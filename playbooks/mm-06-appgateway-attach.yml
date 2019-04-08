@@ -1,0 +1,64 @@
+- name: Connect Mattermost Application Gateway to VMSS
+  hosts: localhost
+  tasks:
+
+    - name: Call the Azure REST API to connect the Mattermost Application Gateway to VMSS
+      azure_rm_resource:
+        api_version: '2017-12-01'
+        resource_group: "{{ resource_group }}"
+        provider: compute
+        resource_type: virtualmachinescalesets
+        resource_name: "{{ vm_name }}-mattermost-vmss"
+        body:
+          sku: 
+            tier: Standard
+            capacity: 4
+            name: Standard_DS1_v2
+          location: "{{ location }}"
+          properties: 
+            overprovision: true
+            virtualMachineProfile: 
+              storageProfile: 
+                imageReference: 
+                  id:  "/subscriptions/{{ lookup('env','AZURE_SUBSCRIPTION_ID') }}/resourceGroups/{{ resource_group }}/providers/Microsoft.Compute/images/{{ vm_name }}-mattermost-disk-image"
+#                  id:  "/subscriptions/ce6c1bf1-74b9-47e9-a1a3-c26922dd34db/resourceGroups/{{ resource_group }}/providers/Microsoft.Compute/images/{{ vm_name }}-mattermost-disk-image"
+
+                osDisk: 
+                  caching: ReadWrite
+                  managedDisk: 
+                    storageAccountType: Standard_LRS
+                  createOption: FromImage
+              osProfile: 
+                computerNamePrefix: "{{ vm_name }}-mattermost-vmss"
+                adminUsername: "{{ admin_username }}"
+                adminPassword: "{{ admin_password }}"
+              networkProfile: 
+                networkInterfaceConfigurations: 
+                  - name: "{{ vm_name }}-mattermost-vmss"
+                    properties: 
+                      primary: true
+                      enableIPForwarding: true
+                      ipConfigurations: 
+                        - name: default
+                          properties: 
+                            applicationGatewayBackendAddressPools: 
+                              - id: "/subscriptions/ce6c1bf1-74b9-47e9-a1a3-c26922dd34db/resourceGroups/{{ resource_group }}/providers/Microsoft.Network/applicationGateways/{{ vm_name }}-mattermost-ag/backendAddressPools/mattermost_ag_back-end_ip_address_pool"
+                            subnet: 
+                              id: "/subscriptions/ce6c1bf1-74b9-47e9-a1a3-c26922dd34db/resourceGroups/{{ resource_group }}/providers/Microsoft.Network/virtualNetworks/{{ vm_name }}-mattermost-vnet/subnets/{{ vm_name }}-mattermost-vmss-subnet"
+            upgradePolicy: 
+              mode: Manual
+    
+    - name: Getting Public IP address of the Application Gateway
+      azure_rm_publicipaddress_facts:
+        resource_group: "{{ resource_group }}"
+        name: "{{ vm_name }}-mattermost-ag-pip-{{ rnum }}"
+      register: output
+
+    - name: Dump Application Gateway Public IP
+      debug:
+        msg: "FQDN: {{ output.ansible_facts.azure_publicipaddresses[0].properties.dnsSettings.fqdn }}"
+
+
+
+#                              - id: "/subscriptions/{{ lookup('env','AZURE_SUBSCRIPTION_ID') }}/resourceGroups/{{ resource_group }}/providers/Microsoft.Network/applicationGateways/{{ vm_name }}-mattermost-ag/backendAddressPools/mattermost_ag_back-end_ip_address_pool"
+#                              id: "/subscriptions/{{ lookup('env','AZURE_SUBSCRIPTION_ID') }}/resourceGroups/{{ resource_group }}/providers/Microsoft.Network/virtualNetworks/{{ vm_name }}-mattermost-vnet/subnets/{{ vm_name }}-mattermost-ag-subnet"

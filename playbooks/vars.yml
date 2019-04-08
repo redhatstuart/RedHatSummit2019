@@ -1,9 +1,18 @@
 ---
 # Multiple Playbooks
 # CHANGE THE VALUES OF THESE AS APPROPRIATE FOR YOU
+#
+# The resource group you have been assigned - get this with "az group list"
 resource_group: MY_RESOURCE_GROUP
+
+# The admin username that you would like to use for all of your VM assets. You will likely not need to connect to them. 
 admin_username: student
+
+# The prefix that you would like to use for all of your Azure assets.  We recommend "firstnamelastname"
 vm_name: MYVM
+
+# The location of the Azure Data Center you are in. This is probably "eastus" or "eastus2" -- Look at your VNC FQDN 
+location: MYAZUREDATACENTER
 
 # AKS Lab Exercise
 aks_cluster_name: MY_AKS_CLUSTER
@@ -16,28 +25,13 @@ aks_dns_prefix: MY_AKS_DNS_PREFIX
 # Random Generated Number
 rnum: RANDOM
 
-# Mattermost VM Deployment Exercise (01)
+# Mattermost VM Deployment Exercise 
 admin_password: Password123!!
-vm_publicip_name: mmmastervmpublicipRANDOM
 
-# Create Azure Managed MySQL Database (PaaS) Exercise (02)
+# Create Azure Managed MySQL Database (PaaS) Exercise 
 mysql_username: mmuser
 mysql_password: Testpasswordxyz12!
-mysql_server_name: mm-mysql-dbRANDOM
 mysql_database_name: mattermost
-
-# Create VM Image Exercise (04)
-vm_image_name: mm-vm-image
-
-# Create Virtual Machine Scale Set Exercise (05)
-vmss_name: mm-vmss
-vmss_publicip_name: mmmsspublicipRANDOM
-
-# Create Azure Application Gateway Exercise (06)
-appgateway_name: mm_ag
-vnet_name: mm-app-gateway-vnet
-subnet_name: mm-app-gateway-subnet
-appgateway_public_ip_name: mmappgatewaypublicipRANDOM
 
 # HPC Lab Exercise
 hp_infra_size: Standard_D4s_v3
