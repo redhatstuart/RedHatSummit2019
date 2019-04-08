@@ -77,17 +77,10 @@
         name: "{{ vm_name }}-mattermost-vmss-pip-{{ rnum }}"
       register: output
 
-    - name: Update Firewall Rules using Azure REST API
-      azure_rm_resource:
-        api_version: '2017-12-01'
+    - name: Add MySQL Firewall Rule
+      azure_rm_mysqlfirewallrule:
         resource_group: "{{ resource_group }}"
-        provider: dbformysql
-        resource_type: servers
-        resource_name: "{{ vm_name }}-mattermost-mysql-{{ rnum }}"
-        subresource:
-          - type: firewallrules
-            name: vmss
-        body:
-          properties: 
-            startIpAddress: "{{ output.ansible_facts.azure_publicipaddresses[0].properties.ipAddress }}"
-            endIpAddress: "{{ output.ansible_facts.azure_publicipaddresses[0].properties.ipAddress }}"
+        server_name: "{{ vm_name }}-mattermost-mysql-{{ rnum }}"
+        name: vmss
+        start_ip_address: "{{ output.ansible_facts.azure_publicipaddresses[0].properties.ipAddress }}"
+        end_ip_address: "{{ output.ansible_facts.azure_publicipaddresses[0].properties.ipAddress }}"
