@@ -6,19 +6,8 @@
       azure_rm_virtualmachine:
         resource_group: "{{ resource_group }}"
         name: "{{ vm_name }}-mattermost-master"
-        started: no
+        generalized: yes
 
-    - name: Generalize Mattermost VM using Azure REST API
-      azure_rm_resource:
-        api_version: '2017-12-01'
-        method: POST
-        resource_group: "{{ resource_group }}"
-        provider: compute
-        resource_type: virtualmachines
-        resource_name: "{{ vm_name }}-mattermost-master"
-        subresource:
-          - type: generalize
-    
     - name: Create a generalized disk image of the Mattermost VM
       azure_rm_image:
         resource_group: "{{ resource_group }}"
