@@ -21,8 +21,6 @@
               storageProfile: 
                 imageReference: 
                   id:  "/subscriptions/{{ lookup('env','AZURE_SUBSCRIPTION_ID') }}/resourceGroups/{{ resource_group }}/providers/Microsoft.Compute/images/{{ vm_name }}-mattermost-disk-image"
-#                  id:  "/subscriptions/ce6c1bf1-74b9-47e9-a1a3-c26922dd34db/resourceGroups/{{ resource_group }}/providers/Microsoft.Compute/images/{{ vm_name }}-mattermost-disk-image"
-
                 osDisk: 
                   caching: ReadWrite
                   managedDisk: 
@@ -42,9 +40,9 @@
                         - name: default
                           properties: 
                             applicationGatewayBackendAddressPools: 
-                              - id: "/subscriptions/ce6c1bf1-74b9-47e9-a1a3-c26922dd34db/resourceGroups/{{ resource_group }}/providers/Microsoft.Network/applicationGateways/{{ vm_name }}-mattermost-ag/backendAddressPools/mattermost_ag_back-end_ip_address_pool"
+                              - id: "/subscriptions/{{ lookup('env','AZURE_SUBSCRIPTION_ID') }}/resourceGroups/{{ resource_group }}/providers/Microsoft.Network/applicationGateways/{{ vm_name }}-mattermost-ag/backendAddressPools/mattermost_ag_back-end_ip_address_pool"
                             subnet: 
-                              id: "/subscriptions/ce6c1bf1-74b9-47e9-a1a3-c26922dd34db/resourceGroups/{{ resource_group }}/providers/Microsoft.Network/virtualNetworks/{{ vm_name }}-mattermost-vnet/subnets/{{ vm_name }}-mattermost-vmss-subnet"
+                              id: "/subscriptions/{{ lookup('env','AZURE_SUBSCRIPTION_ID') }}/resourceGroups/{{ resource_group }}/providers/Microsoft.Network/virtualNetworks/{{ vm_name }}-mattermost-vnet/subnets/{{ vm_name }}-mattermost-ag-subnet"
             upgradePolicy: 
               mode: Manual
     
@@ -57,8 +55,3 @@
     - name: Dump Application Gateway Public IP
       debug:
         msg: "FQDN: {{ output.ansible_facts.azure_publicipaddresses[0].properties.dnsSettings.fqdn }}"
-
-
-
-#                              - id: "/subscriptions/{{ lookup('env','AZURE_SUBSCRIPTION_ID') }}/resourceGroups/{{ resource_group }}/providers/Microsoft.Network/applicationGateways/{{ vm_name }}-mattermost-ag/backendAddressPools/mattermost_ag_back-end_ip_address_pool"
-#                              id: "/subscriptions/{{ lookup('env','AZURE_SUBSCRIPTION_ID') }}/resourceGroups/{{ resource_group }}/providers/Microsoft.Network/virtualNetworks/{{ vm_name }}-mattermost-vnet/subnets/{{ vm_name }}-mattermost-ag-subnet"
