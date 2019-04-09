@@ -6,20 +6,20 @@ Attendees will have hands-on access to Azure to perform the following:
 
 	* Working with the Azure Linux CLI
 	* Connecting Ansible to Microsoft Azure
-  * Create a Red Hat Enterprise Linux virtual machine in Azure using the Azure Marketplace.
-  * Create and configure an Azure MySQL PaaS database.
-  * Deploy an application on the Red Hat Enterprise Linux virtual machine which utilizes the Azure MySQL PaaS database.
-  * Generalize the Red Hat Enterprise Linux virtual machine image to create a golden image template for group deployments.
-  * Scale out the application to multiple servers using Azure virtual machine scale sets.
-  * Create an application gateway & load balancer to front-end the deployed application.
+	* Create a Red Hat Enterprise Linux virtual machine in Azure using the Azure Marketplace.
+	* Create and configure an Azure MySQL PaaS database.
+	* Deploy an application on the Red Hat Enterprise Linux virtual machine which utilizes the Azure MySQL PaaS database.
+	* Generalize the Red Hat Enterprise Linux virtual machine image to create a golden image template for group deployments.
+	* Scale out the application to multiple servers using Azure virtual machine scale sets.
+	* Create an application gateway & load balancer to front-end the deployed application.
 	
 <b>In addition, hands-on labs will be available to showcase:</b>
 
-  * Big data workloads using Azure HDInsight.
-  * High-performance computing using Azure virtual machine infiniband interconnects.
-  * Launching an application in Azure Kubernetes Service (AKS).
-  * Serverless applications using Azure functions.
+	* Big data workloads using Azure HDInsight.
+	* High-performance computing using Azure virtual machine infiniband interconnects.
+	* Launching an application in Azure Kubernetes Service (AKS).
+	* Serverless applications using Azure functions.
 
-Content created by: Stuart Kirk & Zim Kalinowski with assistance from Sasha Rosenbaum, Harold Wong, 
+Content created by: [Stuart Kirk](https://github.com/stuartatmicrosoft) & [Zim Kalinowski] with assistance from [Sasha Rosenbaum], [Harold Wong], 
 
 The content of this program can be re-delivered, on request, to any Microsoft customer seeking to deploy open source workloads on Azure.  Please contact stkirk@microsoft.com for additional details and to coordinate delivery of the program.
