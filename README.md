@@ -1,7 +1,7 @@
 # Deploy and scale Microsoft Azure infrastructures and applications with Red Hat Ansible Automation<hr> Red Hat Summit 2019 - Boston, MA
 
-<img src="images/welcome-to-boston.jpg" align="left">This repository contains practical exercises for the Red Hat Summit 2019 Instructor-Led-Lab (ILL) Deploy and scale Microsoft Azure infrastructures and applications with Red Hat Ansible Automation.
-
+<img src="images/welcome-to-boston.jpg" align="middle">This repository contains practical exercises for the Red Hat Summit 2019 Instructor-Led-Lab (ILL) Deploy and scale Microsoft Azure infrastructures and applications with Red Hat Ansible Automation.
+<BR>
 Attendees will have hands-on access to Azure to perform the following:
 
 	* Working with the Azure Linux CLI
@@ -20,6 +20,6 @@ Attendees will have hands-on access to Azure to perform the following:
 	* Launching an application in Azure Kubernetes Service (AKS).
 	* Serverless applications using Azure functions.
 
-Content created by: [Stuart Kirk](https://github.com/stuartatmicrosoft) & [Zim Kalinowski] with assistance from [Sasha Rosenbaum], [Harold Wong], 
+Content created by: [Stuart Kirk](https://github.com/stuartatmicrosoft) & [Zim Kalinowski](https://github.com/zikalino) with assistance from [Sasha Rosenbaum](https://github.com/divineops), [Harold Wong](https://github.com/haroldwongms),[Matt Davis](https://github.com/da5is), and others.
 
 The content of this program can be re-delivered, on request, to any Microsoft customer seeking to deploy open source workloads on Azure.  Please contact stkirk@microsoft.com for additional details and to coordinate delivery of the program.
