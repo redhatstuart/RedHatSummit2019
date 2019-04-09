@@ -49,7 +49,7 @@
             probe: prob0
 
     - name: Create VMSS
-      azure_rm_virtualmachine_scaleset:
+      azure_rm_virtualmachinescaleset:
         resource_group: "{{ resource_group }}"
         name: "{{ vm_name }}-mattermost-vmss"
         vm_size: Standard_DS1_v2
