@@ -1,8 +1,7 @@
-# Deploy and scale Microsoft Azure infrastructures and applications with Red Hat Ansible Automation<hr> Red Hat Summit 2019 - Boston, MA
-
-<center>
-<img src="images/welcome-to-boston.jpg" align="center">
-</center>
+# Deploy and scale Microsoft Azure infrastructures and applications with Red Hat Ansible Automation
+<p align="center">
+<img src="images/welcome-to-boston.jpg">
+</p>
 This repository contains practical exercises for the Red Hat Summit 2019 Instructor-Led-Lab (ILL)<BR>
 <b>Deploy and scale Microsoft Azure infrastructures and applications with Red Hat Ansible Automation.</b>
 <HR>
