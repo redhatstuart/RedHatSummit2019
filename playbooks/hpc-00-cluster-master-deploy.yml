@@ -6,7 +6,6 @@
   roles:
     - { role: azure.azure_preview_modules }
 
-
   tasks:
 
   - name: Create HPC vNet
