@@ -1,6 +1,10 @@
 - name: Determine Network Addresses of HPC Compute Nodes
   hosts: localhost
   connection: local
+  vars_files:
+    - ./vars-myvars.yml
+  roles:
+    - { role: azure.azure_preview_modules }
 
   tasks:
 

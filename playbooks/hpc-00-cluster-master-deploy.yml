@@ -1,6 +1,11 @@
 - name: Deploy HPC Master Node and Network Infrastructure
   hosts: localhost
   connection: local
+  vars_files:
+    - ./vars-myvars.yml
+  roles:
+    - { role: azure.azure_preview_modules }
+
 
   tasks:
 
