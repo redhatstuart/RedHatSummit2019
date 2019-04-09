@@ -1,5 +1,10 @@
 - name: Create Virtual Machine Scale Set for Mattermost
   hosts: localhost
+  vars_files:
+    - ./vars-myvars.yml
+  roles:
+    - { role: azure.azure_preview_modules }
+
   tasks:
 
     - name: Add VMSS Subnet to existing Virtual network

@@ -1,6 +1,10 @@
 - name: Determine Network Address of Master HPC Infrastructure Node
   hosts: localhost
   connection: local
+  vars_files:
+    - ./vars-myvars.yml
+  roles:
+    - { role: azure.azure_preview_modules }
 
   tasks:
 
@@ -23,6 +27,10 @@
   hosts: masternode
   remote_user: "{{ admin_username }}"
   become: yes  
+  vars_files:
+    - ./vars-myvars.yml
+  roles:
+    - { role: azure.azure_preview_modules }
 
   tasks:
 
