@@ -52,7 +52,7 @@
     #          mode: Manual
 
     - name: Update VMSS to use Application Gateway instead of Load Balancer
-      azure_rm_virtualmachine_scaleset:
+      azure_rm_virtualmachinescaleset:
         resource_group: "{{ resource_group }}"
         name: "{{ vm_name }}-mattermost-vmss"
         vm_size: Standard_DS1_v2
@@ -72,7 +72,23 @@
         image:
           name: "{{ vm_name }}-mattermost-disk-image"
           resource_group: "{{ resource_group }}"
-        app_gateway: '{{ vm_name }}-mattermost-ag'
+        application_gateway: '{{ vm_name }}-mattermost-ag'
+      register: output
+
+    - debug:
+        var: output
+
+    - name: Dump VMSS to make sure everything is correct
+      azure_rm_resource_facts:
+        api_version: '2017-12-01'
+        resource_group: "{{ resource_group }}"
+        provider: compute
+        resource_type: virtualmachinescalesets
+        resource_name: "{{ vm_name }}-mattermost-vmss"
+      register: vmss_output
+
+    - debug:
+        var: vmss_output
 
     - name: Getting Public IP address of the Application Gateway
       azure_rm_publicipaddress_facts:
