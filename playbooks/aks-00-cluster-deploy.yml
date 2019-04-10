@@ -1,12 +1,18 @@
 - name: Deploy AKS
   hosts: localhost
   connection: local
+  vars_files:
+    - ./vars-myvars.yml
+  roles:
+    - { role: azure.azure_preview_modules }
 
   tasks:
+
   - name: Create a managed Azure Container Services (AKS) instance
     azure_rm_aks:
       name: "{{ aks_cluster_name }}"
       resource_group: "{{ resource_group }}"
+      kubernetes_version: "1.12.7"
       dns_prefix: "{{ aks_dns_prefix }}"
       linux_profile:
         admin_username:  "{{ admin_username }}"
@@ -19,4 +25,4 @@
           count: 3 
           vm_size: Standard_D2_v2
       tags:
-        Environment: Production
+        Environment: RedHatSummit
