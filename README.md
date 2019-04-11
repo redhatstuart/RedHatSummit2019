@@ -20,6 +20,9 @@ This repository contains practical exercises for the Red Hat Summit 2019 Instruc
 
 	* Big data workloads using Azure HDInsight.
 	* High-performance computing using Azure virtual machine infiniband interconnects.
+        * Deploy a private Azure Container Registry
+        * Hosting an Azure Application Service
+        * Running a containerized application using Azure Web Apps
 	* Launching an application in Azure Kubernetes Service (AKS).
 	* Serverless applications using Azure functions.
 
