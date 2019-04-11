@@ -29,7 +29,7 @@ echo "**************************************************************************
 	yum -y install deltarpm >> /root/yum-output.log
 	wget http://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
 	yum -y localinstall epel-release-latest-7.noarch.rpm >> /root/yum-output.log
-	yum -y install policycoreutils-python libsemanage-devel gcc gcc-c++ kernel-devel python-devel libxslt-devel libffi-devel openssl-devel python2-pip iptables-services git >> /root/yum-output.log
+	yum -y install policycoreutils-python libsemanage-devel gcc gcc-c++ kernel-devel python-devel libxslt-devel libffi-devel openssl-devel python2-pip iptables-services git telnet >> /root/yum-output.log
 echo "********************************************************************************************"
 	echo "`date` -- Securing host and changing default SSH port to 2112" >>/root/provision-script-output.log
 	sed -i "s/dport 22/dport 2112/g" /etc/sysconfig/iptables
@@ -93,6 +93,25 @@ echo "**************************************************************************
 	wget --quiet -P /home/student/.local/share/keyrings https://raw.githubusercontent.com/stuartatmicrosoft/RedHatSummit2019/master/provision-scripts/Default.keyring
         chown student:student /home/student/.local/share/keyrings/Default.keyring
         restorecon /home/student/.local/share/keyrings/Default.keyring
+echo "********************************************************************************************"
+        wget -P /etc/yum.repos.d https://raw.githubusercontent.com/stuartatmicrosoft/RedHatSummit2019/master/provision-scripts/mongodb-org-4.1.repo 
+        yum -y update kernel
+        yum -y install mongodb mongodb-server nodejs
+        npm install pm2@latest -g
+        systemctl enable mongod
+        systemctl start mongod
+        iptables -I INPUT 2 -m tcp -p tcp --dport 80 -j ACCEPT
+        export MONGO_DBCONNECTION="mongodb://localhost:27017/nodejs-todo"
+        mkdir -p /source/sample-apps/nodejs-todo/src
+        cd /source/sample-apps/nodejs-todo/src   
+        git clone https://github.com/dansand71/node-todo .
+        npm install
+        sed -i "s/8080/80/g" /source/sample-apps/nodejs-todo/src/server.js
+        pm2 start server.js
+        pm2 save
+        pm2 startup systemd -u root
+        systemctl start pm2-root
+        service iptables save
 
 echo "`date` --END-- Provisioning" >>/root/provision-script-output.log
 

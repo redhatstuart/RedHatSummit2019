@@ -218,9 +218,22 @@
                         }
                     },
                     {
-                        "name": "default-allow-noVNC",
+                        "name": "default-allow-http",
                         "properties": {
                             "priority": 1020,
+                            "protocol": "Tcp",
+                            "access": "Allow",
+                            "direction": "Inbound",
+                            "sourceAddressPrefix": "*",
+                            "sourcePortRange": "*",
+                            "destinationAddressPrefix": "*",
+                            "destinationPortRange": "80"
+                        }
+                    },
+                    {
+                        "name": "default-allow-noVNC",
+                        "properties": {
+                            "priority": 1030,
                             "protocol": "Tcp",
                             "access": "Allow",
                             "direction": "Inbound",
