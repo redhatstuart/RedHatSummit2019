@@ -1,0 +1,25 @@
+- name: Create CosmosDB to modernize TODO Application
+  hosts: localhost
+  connection: local
+  vars_files:
+    - ./vars-myvars.yml
+  roles:
+    - { role: azure.azure_preview_modules }
+
+  tasks:
+
+
+    - name: Create Cosmos DB - MongoDB
+      azure_rm_cosmosdbaccount:
+        resource_group: "{{ resource_group }}"
+        name: "{{ vm_name }}-cosmosdb"
+        kind: mongo_db
+        state: present
+#        geo_rep_locations:
+#          - name: southcentralus
+#            failover_priority: 0
+        database_account_offer_type: Standard
+
+
+
+
