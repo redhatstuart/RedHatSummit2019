@@ -8,17 +8,46 @@
 
   tasks:
 
-
-    - name: Create Cosmos DB - MongoDB
+    - name: Create Cosmos DB (MongoDB) for TODO Application
       azure_rm_cosmosdbaccount:
         resource_group: "{{ resource_group }}"
         name: "{{ vm_name }}-cosmosdb"
         kind: mongo_db
         state: present
-#        geo_rep_locations:
-#          - name: southcentralus
-#            failover_priority: 0
+        geo_rep_locations:
+          - name: "{{ location }}"
+            failover_priority: 0
         database_account_offer_type: Standard
+
+    - name: Obtain CosmosDB Facts
+      azure_rm_cosmosdbaccount_facts:
+        resource_group: "{{ resource_group }}"
+        name: "{{ vm_name }}-cosmosdb"
+        retrieve_keys: all
+        retrieve_connection_strings: yes
+      register: facts_output
+
+    - name: Getting CosmosDB Username
+      set_fact:
+        username: "{{ facts_output.accounts[0].name }}"
+
+    - name: Getting CosmosDB Connection String
+      set_fact:
+        constr: "{{ facts_output.accounts[0].connection_strings.connection_strings[0].connection_string }}"
+
+    - name: Getting CosmosDB Primary Master Key
+      set_fact:
+        primarykey: "{{ facts_output.accounts[0].primary_master_key }}"
+
+    - debug:
+        msg: "CosmosDB Username: {{ username }}"
+
+    - debug:
+        msg: "CosmosDB Connection String: {{ constr }}"
+
+    - debug:
+        msg: "CosmosDB Primary Master Key: {{ primarykey }}"
+
 
 
 
