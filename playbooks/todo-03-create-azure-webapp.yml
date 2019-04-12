@@ -11,7 +11,7 @@
     - name: Obtain Azure Container Registry Facts
       azure_rm_containerregistry_facts:
         resource_group: "{{ resource_group }}"
-        name: "{{ vm_name }}ACRegistry2019"
+        name: "{{ vm_name }}2019acregistry"
         retrieve_credentials: true
       register: acr_output
 
