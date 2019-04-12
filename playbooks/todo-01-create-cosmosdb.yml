@@ -48,7 +48,3 @@
     - debug:
         msg: "CosmosDB Primary Master Key: {{ primarykey }}"
 
-
-
-
-
