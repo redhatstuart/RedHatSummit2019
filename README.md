@@ -5,7 +5,7 @@
 This repository contains practical exercises for the Red Hat Summit 2019 Instructor-Led-Lab (ILL)<BR>
 <b>Deploy and scale Microsoft Azure infrastructures and applications with Red Hat Ansible Automation.</b>
 <HR>
-<b>Attendees will have hands-on access to Azure to perform the following:</b>
+<b>Attendees will have hands-on access to Azure to perform the following tasks which build on one another:</b>
 
 	* Working with the Azure Linux CLI
 	* Connecting Ansible to Microsoft Azure
@@ -16,7 +16,7 @@ This repository contains practical exercises for the Red Hat Summit 2019 Instruc
 	* Scale out the application to multiple servers using Azure virtual machine scale sets.
 	* Create an application gateway & load balancer to front-end the deployed application.
 	
-<b>In addition, hands-on labs will be available to showcase:</b>
+<b>In addition, separate hands-on labs will be available to showcase:</b>
 
 	* Big data workloads using Azure HDInsight.
 	* High-performance computing using Azure virtual machine infiniband interconnects.
