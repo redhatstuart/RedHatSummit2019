@@ -43,7 +43,8 @@
         resource_group: "{{ resource_group }}"
         name: "{{ vm_name }}-hdinsight-cluster"
         location: eastus
-        cluster_version: 3.6
+#        cluster_version: 3.6
+        cluster_version: 4.0
         os_type: linux
         tier: standard
         cluster_definition:
