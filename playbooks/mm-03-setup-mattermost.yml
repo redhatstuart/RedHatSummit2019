@@ -3,8 +3,6 @@
   connection: local
   vars_files:
     - ./vars-myvars.yml
-  roles:
-    - { role: azure.azure_preview_modules }
 
   tasks:
     - name: Get Mattermost VM IP Address
@@ -24,8 +22,6 @@
   become: yes  
   vars_files:
     - ./vars-myvars.yml
-  roles:
-    - { role: azure.azure_preview_modules }
 
   tasks:
     - name: Create Mattermost User
