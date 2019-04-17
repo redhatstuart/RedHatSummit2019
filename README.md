@@ -28,4 +28,8 @@ This repository contains practical exercises for the Red Hat Summit 2019 Instruc
 
 Content created by: [Stuart Kirk](https://github.com/stuartatmicrosoft) & [Zim Kalinowski](https://github.com/zikalino) with assistance from [Sasha Rosenbaum](https://github.com/divineops), [Harold Wong](https://github.com/haroldwongms), [Matt Davis](https://github.com/da5is), [Michael Yen-Chi Ho](https://github.com/yenchiho), [Patrick Rutledge](https://github.com/rut31337), [Manesh Raveendran](https://github.com/Manesh-R) and others.
 
+Base implementation for Function App Docker container comes from here:
+
+https://github.com/Azure/azure-functions-docker-python-sample
+
 The content of this program can be re-delivered, on request, to any Microsoft customer seeking to deploy open source workloads on Azure.  Please contact stkirk@microsoft.com for additional details and to coordinate delivery of the program.
