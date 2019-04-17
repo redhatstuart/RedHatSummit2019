@@ -75,7 +75,7 @@ echo "**************************************************************************
         pip install --upgrade python-dateutil >> /root/pip-output.log
         yum -y remove pyOpenSSL rhn-check rhn-client-tools rhn-setup rhn-setup-gnome rhnlib rhnsd yum-rhn-plugin PackageKit* subscription-manager >>/root/yum-output.log
         pip install pyOpenSSL >> /root/pip-output.log
-        pip install ansible==2.7.9 >> /root/pip-output.log
+        pip install ansible==2.8.0b1 >> /root/pip-output.log
         mkdir -p /etc/ansible
         echo "[ssh_connection]" > /etc/ansible/ansible.cfg
         echo "ssh_args = -o StrictHostKeyChecking=no" >> /etc/ansible/ansible.cfg

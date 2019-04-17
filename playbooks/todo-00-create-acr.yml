@@ -10,7 +10,7 @@
 
     - name: Create an Azure Container Registry for TODO Application
       azure_rm_containerregistry:
-        name: "{{ vm_name }}ACRegistry2019"
+        name: "{{ vm_name }}{{ rnum }}acr"
         resource_group: "{{ resource_group }}"
         admin_user_enabled: true
         sku: Basic

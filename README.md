@@ -5,7 +5,7 @@
 This repository contains practical exercises for the Red Hat Summit 2019 Instructor-Led-Lab (ILL)<BR>
 <b>Deploy and scale Microsoft Azure infrastructures and applications with Red Hat Ansible Automation.</b>
 <HR>
-<b>Attendees will have hands-on access to Azure to perform the following:</b>
+<b>Attendees will have hands-on access to Azure to perform the following tasks which build on one another:</b>
 
 	* Working with the Azure Linux CLI
 	* Connecting Ansible to Microsoft Azure
@@ -16,7 +16,7 @@ This repository contains practical exercises for the Red Hat Summit 2019 Instruc
 	* Scale out the application to multiple servers using Azure virtual machine scale sets.
 	* Create an application gateway & load balancer to front-end the deployed application.
 	
-<b>In addition, hands-on labs will be available to showcase:</b>
+<b>In addition, separate hands-on labs will be available to showcase:</b>
 
 	* Big data workloads using Azure HDInsight.
 	* High-performance computing using Azure virtual machine infiniband interconnects.
@@ -26,6 +26,6 @@ This repository contains practical exercises for the Red Hat Summit 2019 Instruc
 	* Launching an application in Azure Kubernetes Service (AKS).
 	* Serverless applications using Azure functions.
 
-Content created by: [Stuart Kirk](https://github.com/stuartatmicrosoft) & [Zim Kalinowski](https://github.com/zikalino) with assistance from [Sasha Rosenbaum](https://github.com/divineops), [Harold Wong](https://github.com/haroldwongms), [Matt Davis](https://github.com/da5is), [Michael Yen-Chi Ho](https://github.com/yenchiho), [Patrick Rutledge](https://github.com/rut31337), and others.
+Content created by: [Stuart Kirk](https://github.com/stuartatmicrosoft) & [Zim Kalinowski](https://github.com/zikalino) with assistance from [Sasha Rosenbaum](https://github.com/divineops), [Harold Wong](https://github.com/haroldwongms), [Matt Davis](https://github.com/da5is), [Michael Yen-Chi Ho](https://github.com/yenchiho), [Patrick Rutledge](https://github.com/rut31337), [Manesh Raveendran](https://github.com/Manesh-R) and others.
 
 The content of this program can be re-delivered, on request, to any Microsoft customer seeking to deploy open source workloads on Azure.  Please contact stkirk@microsoft.com for additional details and to coordinate delivery of the program.
