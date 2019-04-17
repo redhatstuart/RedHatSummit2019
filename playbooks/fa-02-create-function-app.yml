@@ -1,7 +1,7 @@
 - name: Create function app with Ansible in Docker container
   hosts: localhost
   connection: local
-  vars_files:
+   vars_files:
     - ./vars-myvars.yml
 
   tasks:
@@ -28,6 +28,8 @@
           resource_group: "{{ resource_group }}"
           name: "{{ function_app_name }}plan"
         container_settings:
-          name: httpd
+          name: zikalino/functionapp
         app_settings:
-          FUNCTIONS_EXTENSION_VERSION: "~2"
+          DOCKER_REGISTRY_SERVER_URL: https://index.docker.io
+          WEBSITE_NODE_DEFAULT_VERSION: 10.14.1
+          WEBSITES_ENABLE_APP_SERVICE_STORAGE: no
