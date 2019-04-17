@@ -41,7 +41,7 @@
     - name: Create HDInsight Cluster
       azure_rm_hdinsightcluster:
         resource_group: "{{ resource_group }}"
-        name: "{{ vm_name }}-hdinsight-cluster"
+        name: "{{ vm_name }}-hdinsight-cluster-40"
         location: eastus
         cluster_version: 4.0
         os_type: linux
