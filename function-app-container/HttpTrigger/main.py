@@ -1,23 +1,23 @@
 import logging
-
 import azure.functions as func
+import subprocess
 
 def main(req: func.HttpRequest) -> func.HttpResponse:
     logging.info('Python HTTP trigger function processed a request.')
 
-    name = req.params.get('name')
-    if not name:
-        try:
-            req_body = req.get_json()
-        except ValueError:
-            pass
-        else:
-            name = req_body.get('name')
+    subscription_id = req.params.get('subscription_id')
+    tenant = req.params.get('tenant')
+    secret = req.params.get('secret')
+    client = req.params.get('client_id')
 
-    if name:
-        return func.HttpResponse(f"Hello {name}!")
-    else:
-        return func.HttpResponse(
-             "Please pass a name on the query string or in the request body",
-             status_code=400
-        )
+    body = req.get_body()
+
+    f = open("./playbook.yml", "wb")
+    f.write(body) 
+    f.close()
+
+    cmd = "ansible-playbook ./playbook.yml"
+    process = subprocess.Popen(cmd.split(), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    output, error = process.communicate()
+
+    return func.HttpResponse(str(output) + str(error), headers={"Access-Control-Allow-Origin": "*"})
