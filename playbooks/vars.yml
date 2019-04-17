@@ -8,7 +8,7 @@ resource_group: MY_RESOURCE_GROUP
 # The admin username that you would like to use for all of your VM assets. You will likely not need to connect to them. 
 admin_username: student
 
-# The prefix that you would like to use for all of your Azure assets.  We recommend "firstnamelastname" NOTE: PLEASE USE ONLY [A-Z][a-z][0-9] !!!!!!
+# The prefix that you would like to use for all of your Azure assets.  We recommend "firstnamelastname" NOTE: PLEASE USE ONLY [a-z][0-9] and no more than 15 characters!!!!!!
 vm_name: MYVM
 
 # The location of the Azure Data Center you are in. This is probably "eastus" or "eastus2" -- Look at your VNC FQDN at the top of the screen
