@@ -35,5 +35,4 @@ mysql_database_name: mattermost
 
 # HPC Lab Exercise
 hp_infra_size: Standard_D4s_v3
-#hp_compute_size: Standard_A8
 hp_compute_size: Standard_H16r

@@ -11,7 +11,7 @@
     - name: Obtain Azure Container Registry Facts
       azure_rm_containerregistry_facts:
         resource_group: "{{ resource_group }}"
-        name: "{{ vm_name }}2019acregistry"
+        name: "{{ vm_name }}acr{{ rnum }}"
         retrieve_credentials: true
       register: acr_output
 
@@ -35,3 +35,12 @@
           registry_server_url: "{{ acr_output.registries[0].login_server }}"
           registry_server_user: "{{ acr_output.registries[0].name }}"
           registry_server_password: "{{ acr_output.registries[0].credentials.password }}"
+
+    - name: Obtain Azure Web App Facts
+      azure_rm_webapp_facts:
+        resource_group: "{{ resource_group }}"
+        name: "{{ vm_name }}-todo-webapp"
+      register: webapp_output
+
+    - debug:
+        msg: "Your PaaS based Azure Web App URL is: http://{{ webapp_output.webapps[0].default_host_name }} -- Please allow approximately 5 minutes for the app to come up before visiting this URL."
