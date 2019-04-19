@@ -1,18 +1,18 @@
 - name: Create function app with Ansible in Docker container
   hosts: localhost
   connection: local
-  # vars_files:
-  #  - ./vars-myvars.yml
+  vars_files:
+   - ./vars-myvars.yml
 
   vars:
     resource_group: zimswebapp
-    function_app_name: zimsffunctionacr
-    registry_name: zimscontainerregistry
+    registry_name: "{{ function_name }}{{ rnum }}acr"
+    storage_name: "{{ function_name }}{{ rnum }}st"
   tasks:
     - name: Create a linux app service plan
       azure_rm_appserviceplan:
         resource_group: "{{ resource_group }}"
-        name: "{{ function_app_name }}plan"
+        name: "{{ function_name }}plan"
         sku: S1
         is_linux: true
         number_of_workers: 1
@@ -20,7 +20,7 @@
     - name: create storage account for function apps
       azure_rm_storageaccount:
         resource_group: '{{ resource_group }}'
-        name: "{{ function_app_name }}stx"
+        name: "{{ storage_name }}"
         account_type: Standard_LRS
       register: output
 
@@ -31,7 +31,7 @@
         resource_group: "{{ resource_group }}"
         provider: storage
         resource_type: storageaccounts
-        resource_name: "{{ function_app_name }}stx"
+        resource_name: "{{ storage_name }}"
         subresource:
           - type: listkeys
       register: storage_output
@@ -46,17 +46,17 @@
     - name: Create container based function app
       azure_rm_functionapp:
         resource_group: "{{ resource_group }}"
-        name: "{{ function_app_name }}"
-        storage_account: "{{ function_app_name }}stx"
+        name: "{{ function_name }}"
+        storage_account: "{{ storage_name }}"
         plan:
           resource_group: "{{ resource_group }}"
-          name: "{{ function_app_name }}plan"
+          name: "{{ function_name }}plan"
         container_settings:
           name: functionapp
           registry_server_url: "{{ acr_output.registries[0].login_server }}"
           registry_server_user: "{{ acr_output.registries[0].name }}"
           registry_server_password: "{{ acr_output.registries[0].credentials.password }}"
         app_settings:
-          AzureWebJobsStorage: DefaultEndpointsProtocol=https;AccountName={{ function_app_name }}stx;AccountKey={{ storage_output['response']['keys'][0]['value'] }}
+          AzureWebJobsStorage: DefaultEndpointsProtocol=https;AccountName={{ storage_name }};AccountKey={{ storage_output['response']['keys'][0]['value'] }}
           WEBSITE_NODE_DEFAULT_VERSION: 10.14.1
           WEBSITES_ENABLE_APP_SERVICE_STORAGE: no

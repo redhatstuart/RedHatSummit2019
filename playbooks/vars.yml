@@ -18,6 +18,11 @@ location: MYAZUREDATACENTER
 aks_cluster_name: MY_AKS_CLUSTER
 aks_dns_prefix: MY_AKS_DNS_PREFIX
 
+# Function App Exercise
+function_name: zimsfunctionapp
+github_id: MYGITHUBID
+github_token: MYGITHUBTOKEN
+
 ###########################################
 # DO NOT CHANGE ANYTHING BELOW THIS POINT
 ###########################################

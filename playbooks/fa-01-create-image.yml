@@ -1,13 +1,11 @@
 - name: Create a Docker container with function app
   hosts: localhost
   connection: local
-  # vars_files:
-  #  - ./vars-myvars.yml
-
+  vars_files:
+   - ./vars-myvars.yml
   vars:
-    resource_group: zimswebapp
-    registry_name: zimscontainerregistry
-    task_name: zimstask
+    registry_name: "{{ function_name }}{{ rnum }}acr"
+    task_name: buildtask
   tasks:
 
     - name: Create container registry
@@ -20,7 +18,6 @@
            
     - name: Build Image using Azure Container Registry
       azure_rm_resource:
-        # url: /subscriptions/{{ lookup('env','AZURE_SUBSCRIPTION_ID') }}/resourceGroups/{resourceGroupName}/providers/Microsoft.ContainerRegistry/registries/{registryName}/tasks/{taskName}
         api_version: '2018-09-01'
         resource_group: "{{ resource_group }}"
         provider: containerregistry
@@ -50,11 +47,11 @@
                 - name: mySourceTrigger
                   sourceRepository: 
                     sourceControlType: Github
-                    repositoryUrl: https://github.com/zikalino/RedHatSummit2019
+                    repositoryUrl: https://github.com/{{ github_id }}/RedHatSummit2019
                     branch: master
                     sourceControlAuthProperties: 
                       tokenType: PAT
-                      token:  "{{ lookup('env', 'GITHUB_ACCESS_TOKEN') }}"
+                      token:  "{{ github_token }}"
                   sourceTriggerEvents: 
                     - commit
               baseImageTrigger: 
