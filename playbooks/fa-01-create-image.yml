@@ -17,41 +17,7 @@
         location: eastus
         admin_user_enabled: true
         sku: Premium
-
-
-    - name: Sample for Azure REST API - BuildTasks_Create
-      azure_rm_resource:
-        # url: /subscriptions/{{ lookup('env','AZURE_SUBSCRIPTION_ID') }}/resourceGroups/{resourceGroupName}/providers/Microsoft.ContainerRegistry/registries/{registryName}/buildTasks/{buildTaskName}
-        api_version: '2018-02-01-preview'
-        resource_group: "{{ resource_group }}"
-        provider: containerregistry
-        resource_type: registries
-        resource_name: "{{ registry_name }}"
-        subresource:
-          - type: buildtasks
-            name: "{{ task_name }}"
-        body:
-          properties: 
-            sourceRepository: 
-              sourceControlType: Github
-              repositoryUrl: https://github.com/stuartatmicrosoft/RedHatSummit2019.git
-              branch: master
-              sourceControlAuthProperties: 
-                tokenType: PAT
-                token:  "{{ lookup('env', 'GITHUB_ACCESS_TOKEN') }}"
-            sourceTriggerEvents: 
-              - commit
-            platform: 
-              osType: Linux
-              cpu: 2
-            alias: myalias
-            status: Enabled
-          location: eastus
-      register: output
-
-    - debug:
-        var: output
-                
+           
     - name: Build Image using Azure Container Registry
       azure_rm_resource:
         # url: /subscriptions/{{ lookup('env','AZURE_SUBSCRIPTION_ID') }}/resourceGroups/{resourceGroupName}/providers/Microsoft.ContainerRegistry/registries/{registryName}/tasks/{taskName}
@@ -75,7 +41,7 @@
               type: Docker
               imageNames: 
                 - functionapp
-              dockerFilePath: function-app-container/DockerFile
+              dockerFilePath: Dockerfile
               contextPath: function-app-container
               isPushEnabled: true
               noCache: false
@@ -84,7 +50,7 @@
                 - name: mySourceTrigger
                   sourceRepository: 
                     sourceControlType: Github
-                    repositoryUrl: https://github.com/stuartatmicrosoft/RedHatSummit2019.git
+                    repositoryUrl: https://github.com/zikalino/RedHatSummit2019
                     branch: master
                     sourceControlAuthProperties: 
                       tokenType: PAT
@@ -95,7 +61,3 @@
                 name: myBaseImageTrigger
                 baseImageTriggerType: Runtime
           location: eastus
-    - debug:
-        var: output
-
-

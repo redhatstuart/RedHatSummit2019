@@ -6,7 +6,8 @@
 
   vars:
     resource_group: zimswebapp
-    function_app_name: zimsfadocker
+    function_app_name: zimsffunctionacr
+    registry_name: zimscontainerregistry
   tasks:
     - name: Create a linux app service plan
       azure_rm_appserviceplan:
@@ -21,6 +22,7 @@
         resource_group: '{{ resource_group }}'
         name: "{{ function_app_name }}stx"
         account_type: Standard_LRS
+      register: output
 
     - name: Obtain storage keys
       azure_rm_resource:
@@ -34,6 +36,13 @@
           - type: listkeys
       register: storage_output
 
+    - name: Obtain Azure Container Registry Facts
+      azure_rm_containerregistry_facts:
+        resource_group: "{{ resource_group }}"
+        name: "{{ registry_name }}"
+        retrieve_credentials: true
+      register: acr_output
+
     - name: Create container based function app
       azure_rm_functionapp:
         resource_group: "{{ resource_group }}"
@@ -43,9 +52,11 @@
           resource_group: "{{ resource_group }}"
           name: "{{ function_app_name }}plan"
         container_settings:
-          name: zikalino/functionapp:x7
+          name: functionapp
+          registry_server_url: "{{ acr_output.registries[0].login_server }}"
+          registry_server_user: "{{ acr_output.registries[0].name }}"
+          registry_server_password: "{{ acr_output.registries[0].credentials.password }}"
         app_settings:
           AzureWebJobsStorage: DefaultEndpointsProtocol=https;AccountName={{ function_app_name }}stx;AccountKey={{ storage_output['response']['keys'][0]['value'] }}
-          DOCKER_REGISTRY_SERVER_URL: https://index.docker.io
           WEBSITE_NODE_DEFAULT_VERSION: 10.14.1
           WEBSITES_ENABLE_APP_SERVICE_STORAGE: no
