@@ -1,0 +1,101 @@
+- name: Create a Docker container with function app
+  hosts: localhost
+  connection: local
+  # vars_files:
+  #  - ./vars-myvars.yml
+
+  vars:
+    resource_group: zimswebapp
+    registry_name: zimscontainerregistry
+    task_name: zimstask
+  tasks:
+
+    - name: Create container registry
+      azure_rm_containerregistry:
+        resource_group: "{{ resource_group }}"
+        name: "{{ registry_name }}"
+        location: eastus
+        admin_user_enabled: true
+        sku: Premium
+
+
+    - name: Sample for Azure REST API - BuildTasks_Create
+      azure_rm_resource:
+        # url: /subscriptions/{{ lookup('env','AZURE_SUBSCRIPTION_ID') }}/resourceGroups/{resourceGroupName}/providers/Microsoft.ContainerRegistry/registries/{registryName}/buildTasks/{buildTaskName}
+        api_version: '2018-02-01-preview'
+        resource_group: "{{ resource_group }}"
+        provider: containerregistry
+        resource_type: registries
+        resource_name: "{{ registry_name }}"
+        subresource:
+          - type: buildtasks
+            name: "{{ task_name }}"
+        body:
+          properties: 
+            sourceRepository: 
+              sourceControlType: Github
+              repositoryUrl: https://github.com/stuartatmicrosoft/RedHatSummit2019.git
+              branch: master
+              sourceControlAuthProperties: 
+                tokenType: PAT
+                token:  "{{ lookup('env', 'GITHUB_ACCESS_TOKEN') }}"
+            sourceTriggerEvents: 
+              - commit
+            platform: 
+              osType: Linux
+              cpu: 2
+            alias: myalias
+            status: Enabled
+          location: eastus
+      register: output
+
+    - debug:
+        var: output
+                
+    - name: Build Image using Azure Container Registry
+      azure_rm_resource:
+        # url: /subscriptions/{{ lookup('env','AZURE_SUBSCRIPTION_ID') }}/resourceGroups/{resourceGroupName}/providers/Microsoft.ContainerRegistry/registries/{registryName}/tasks/{taskName}
+        api_version: '2018-09-01'
+        resource_group: "{{ resource_group }}"
+        provider: containerregistry
+        resource_type: registries
+        resource_name: "{{ registry_name }}"
+        subresource:
+          - type: tasks
+            name: "{{ task_name }}"
+        body:
+          properties: 
+            status: Enabled
+            platform: 
+              os: Linux
+              architecture: amd64
+            agentConfiguration: 
+              cpu: 2
+            step: 
+              type: Docker
+              imageNames: 
+                - functionapp
+              dockerFilePath: function-app-container/DockerFile
+              contextPath: function-app-container
+              isPushEnabled: true
+              noCache: false
+            trigger: 
+              sourceTriggers: 
+                - name: mySourceTrigger
+                  sourceRepository: 
+                    sourceControlType: Github
+                    repositoryUrl: https://github.com/stuartatmicrosoft/RedHatSummit2019.git
+                    branch: master
+                    sourceControlAuthProperties: 
+                      tokenType: PAT
+                      token:  "{{ lookup('env', 'GITHUB_ACCESS_TOKEN') }}"
+                  sourceTriggerEvents: 
+                    - commit
+              baseImageTrigger: 
+                name: myBaseImageTrigger
+                baseImageTriggerType: Runtime
+          location: eastus
+    - debug:
+        var: output
+
+
