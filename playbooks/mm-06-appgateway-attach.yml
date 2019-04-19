@@ -5,51 +5,6 @@
   roles:
     - ../modules
   tasks:
-
-    #- name: Call the Azure REST API to connect the Mattermost Application Gateway to VMSS
-    #  azure_rm_resource:
-    #    api_version: '2017-12-01'
-    #    resource_group: "{{ resource_group }}"
-    #    provider: compute
-    #    resource_type: virtualmachinescalesets
-    #    resource_name: "{{ vm_name }}-mattermost-vmss"
-    #    body:
-    #      sku: 
-    #        tier: Standard
-    #        capacity: 4
-    #        name: Standard_DS1_v2
-    #      location: "{{ location }}"
-    #      properties: 
-    #        overprovision: true
-    #        virtualMachineProfile: 
-    #          storageProfile: 
-    #            imageReference: 
-    #              id:  "/subscriptions/{{ lookup('env','AZURE_SUBSCRIPTION_ID') }}/resourceGroups/{{ resource_group }}/providers/Microsoft.Compute/images/{{ vm_name }}-mattermost-disk-image"
-    #            osDisk: 
-    #              caching: ReadWrite
-    #              managedDisk: 
-    #                storageAccountType: Standard_LRS
-    #              createOption: FromImage
-    #          osProfile: 
-    #            computerNamePrefix: "{{ vm_name }}-mattermost-vmss"
-    #            adminUsername: "{{ admin_username }}"
-    #            adminPassword: "{{ admin_password }}"
-    #          networkProfile: 
-    #            networkInterfaceConfigurations: 
-    #              - name: "{{ vm_name }}-mattermost-vmss"
-    #                properties: 
-    #                  primary: true
-    #                  enableIPForwarding: true
-    #                  ipConfigurations: 
-    #                    - name: default
-    #                      properties: 
-    #                        applicationGatewayBackendAddressPools: 
-    #                          - id: "/subscriptions/{{ lookup('env','AZURE_SUBSCRIPTION_ID') }}/resourceGroups/{{ resource_group }}/providers/Microsoft.Network/applicationGateways/{{ vm_name }}-mattermost-ag/backendAddressPools/mattermost_ag_back-end_ip_address_pool"
-    #                        subnet: 
-    #                          id: "/subscriptions/{{ lookup('env','AZURE_SUBSCRIPTION_ID') }}/resourceGroups/{{ resource_group }}/providers/Microsoft.Network/virtualNetworks/{{ vm_name }}-mattermost-vnet/subnets/{{ vm_name }}-mattermost-ag-subnet"
-    #        upgradePolicy: 
-    #          mode: Manual
-
     - name: Update VMSS to use Application Gateway instead of Load Balancer
       azure_rm_virtualmachinescaleset:
         resource_group: "{{ resource_group }}"
@@ -72,22 +27,6 @@
           name: "{{ vm_name }}-mattermost-disk-image"
           resource_group: "{{ resource_group }}"
         application_gateway: '{{ vm_name }}-mattermost-ag'
-      register: output
-
-    - debug:
-        var: output
-
-    - name: Dump VMSS to make sure everything is correct
-      azure_rm_resource_facts:
-        api_version: '2017-12-01'
-        resource_group: "{{ resource_group }}"
-        provider: compute
-        resource_type: virtualmachinescalesets
-        resource_name: "{{ vm_name }}-mattermost-vmss"
-      register: vmss_output
-
-    - debug:
-        var: vmss_output
 
     - name: Getting Public IP address of the Application Gateway
       azure_rm_publicipaddress_facts:
