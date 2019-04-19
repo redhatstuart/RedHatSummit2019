@@ -5,7 +5,6 @@
    - ./vars-myvars.yml
 
   vars:
-    resource_group: zimswebapp
     registry_name: "{{ function_name }}{{ rnum }}acr"
     storage_name: "{{ function_name }}{{ rnum }}st"
   tasks:
@@ -22,6 +21,7 @@
         resource_group: '{{ resource_group }}'
         name: "{{ storage_name }}"
         account_type: Standard_LRS
+        kind: StorageV2
       register: output
 
     - name: Obtain storage keys
