@@ -6,12 +6,14 @@
 
   tasks:
 
-    - name: Create Cosmos DB (MongoDB) for TODO Application
       azure_rm_cosmosdbaccount:
         resource_group: "{{ resource_group }}"
         name: "{{ vm_name }}-cosmosdb"
         kind: mongo_db
         state: present
+        enable_multiple_write_locations: false
+        consistency_policy:
+          default_consistency_level: "consistent_prefix"
         geo_rep_locations:
           - name: "{{ location }}"
             failover_priority: 0
