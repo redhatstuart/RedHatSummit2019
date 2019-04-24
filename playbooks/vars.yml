@@ -14,10 +14,6 @@ vm_name: MYVM
 # The location of the Azure Data Center you are in. This is probably "eastus" or "eastus2" -- Look at your VNC FQDN at the top of the screen
 location: MYAZUREDATACENTER
 
-# AKS Lab Exercise
-aks_cluster_name: MY_AKS_CLUSTER
-aks_dns_prefix: MY_AKS_DNS_PREFIX
-
 # Function App Exercise
 function_name: zimsfunctionapp
 github_id: MYGITHUBID
@@ -40,4 +36,4 @@ mysql_database_name: mattermost
 
 # HPC Lab Exercise
 hp_infra_size: Standard_D4s_v3
-hp_compute_size: Standard_H16r
+hp_compute_size: Standard_A8

@@ -10,10 +10,10 @@
 
     - name: Create a managed Azure Container Services (AKS) instance to support Hero Voting App
       azure_rm_aks:
-        name: "{{ aks_cluster_name }}"
+        name: "{{ vm_name }}-aks"
         resource_group: "{{ resource_group }}"
         kubernetes_version: "1.12.7"
-        dns_prefix: "{{ aks_dns_prefix }}"
+        dns_prefix: "{{ vm_name }}-dns"
         linux_profile:
           admin_username:  "{{ admin_username }}"
           ssh_key: "{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
