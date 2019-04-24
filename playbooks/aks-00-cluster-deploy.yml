@@ -3,43 +3,64 @@
   connection: local
   vars_files:
     - ./vars-myvars.yml
+  roles:
+    - ../modules
 
   tasks:
 
-#    - name: Create a managed Azure Container Services (AKS) instance
-#      azure_rm_aks:
-#        name: "{{ aks_cluster_name }}"
-#        resource_group: "{{ resource_group }}"
-#        kubernetes_version: "1.12.7"
-#        dns_prefix: "{{ aks_dns_prefix }}"
-#        linux_profile:
-#          admin_username:  "{{ admin_username }}"
-#          ssh_key: "{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
-#        service_principal:
-#          client_id: "{{ lookup('env', 'AZURE_CLIENT_ID') }}"
-#          client_secret: "{{ lookup('env', 'AZURE_SECRET') }}"
-#        agent_pool_profiles:
-#          - name: default
-#            count: 2 
-#            vm_size: Standard_D2_v2
-#        tags:
-#          Environment: RedHatSummit
-#
-#    - name: Create Cosmos DB (MongoDB) for Hero Voting App
-#      azure_rm_cosmosdbaccount:
-#        resource_group: "{{ resource_group }}"
-#        name: "{{ vm_name }}-cosmosdb"
-#        kind: mongo_db
-#        state: present
-#        enable_multiple_write_locations: false
-#        consistency_policy:
-#          default_consistency_level: "consistent_prefix"
-#        geo_rep_locations:
-#          - name: "{{ location }}"
-#            failover_priority: 0
-#        database_account_offer_type: Standard
+    - name: Create a managed Azure Container Services (AKS) instance to support Hero Voting App
+      azure_rm_aks:
+        name: "{{ aks_cluster_name }}"
+        resource_group: "{{ resource_group }}"
+        kubernetes_version: "1.12.7"
+        dns_prefix: "{{ aks_dns_prefix }}"
+        linux_profile:
+          admin_username:  "{{ admin_username }}"
+          ssh_key: "{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
+        service_principal:
+          client_id: "{{ lookup('env', 'AZURE_CLIENT_ID') }}"
+          client_secret: "{{ lookup('env', 'AZURE_SECRET') }}"
+        agent_pool_profiles:
+          - name: default
+            count: 2 
+            vm_size: Standard_D2_v2
+        tags:
+          Environment: RedHatSummit
 
-    - name: Get facts for one Azure Kubernetes Service
+    - name: Create Cosmos DB (MongoDB) for Red Hat Summit Labs
+      azure_rm_cosmosdbaccount:
+        resource_group: "{{ resource_group }}"
+        name: "{{ vm_name }}-cosmosdb"
+        kind: mongo_db
+        state: present
+        enable_aggregation_pipeline: true
+        enable_multiple_write_locations: false
+        consistency_policy:
+          default_consistency_level: "consistent_prefix"
+        geo_rep_locations:
+          - name: "{{ location }}"
+            failover_priority: 0
+        database_account_offer_type: Standard
+
+    - name: Create 'heroratings' database within CosmosDB to support Hero Voting App using Azure REST API
+      azure_rm_resource:
+        api_version: '2015-04-08'
+        resource_group: "{{ resource_group }}"
+        provider: documentdb
+        resource_type: databaseaccounts
+        resource_name: "{{ vm_name }}-cosmosdb"
+        subresource:
+          - type: apis
+            name: mongo
+          - type: databases
+            name: "heroratings"
+        body:
+          properties: 
+            resource: 
+              id: updatedDatabaseName
+            options: 
+
+    - name: Obtain AKS Facts
       azure_rm_aks_facts:
         name: "{{ aks_cluster_name }}"
         resource_group: "{{ resource_group }}"
@@ -56,12 +77,6 @@
     - debug:
         msg: "AKS URL of Application: {{ aks_output.aks[0].properties.fqdn }}:8080" 
 
-#    - debug:
-#        msg: "CosmosDB Username: {{ cosmosdb_output.accounts[0].name }}"
-
     - debug:
         msg: "CosmosDB Connection String: {{ cosmosdb_output.accounts[0].connection_strings.connection_strings[0].connection_string }}"
-
-#    - debug:
-#        msg: "CosmosDB Primary Master Key: {{ cosmosdb_output.accounts[0].primary_master_key }}"
 
