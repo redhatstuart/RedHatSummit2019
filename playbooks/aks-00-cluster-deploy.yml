@@ -42,7 +42,7 @@
             failover_priority: 0
         database_account_offer_type: Standard
 
-    - name: Create 'heroratings' database within CosmosDB to support Hero Voting App using Azure REST API
+    - name: Create 'webratings' database within CosmosDB to support Hero Voting App using Azure REST API
       azure_rm_resource:
         api_version: '2015-04-08'
         resource_group: "{{ resource_group }}"
@@ -53,7 +53,7 @@
           - type: apis
             name: mongo
           - type: databases
-            name: "heroratings"
+            name: "webratings"
         body:
           properties: 
             resource: 
