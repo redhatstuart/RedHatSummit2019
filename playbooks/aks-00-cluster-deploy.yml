@@ -1,4 +1,4 @@
-- name: Deploy AKS
+- name: Deploy AKS Infrastructure to support Hero Voting App
   hosts: localhost
   connection: local
   vars_files:
@@ -6,21 +6,65 @@
 
   tasks:
 
-  - name: Create a managed Azure Container Services (AKS) instance
-    azure_rm_aks:
-      name: "{{ aks_cluster_name }}"
-      resource_group: "{{ resource_group }}"
-      kubernetes_version: "1.12.7"
-      dns_prefix: "{{ aks_dns_prefix }}"
-      linux_profile:
-        admin_username:  "{{ admin_username }}"
-        ssh_key: "{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
-      service_principal:
-        client_id: "{{ lookup('env', 'AZURE_CLIENT_ID') }}"
-        client_secret: "{{ lookup('env', 'AZURE_SECRET') }}"
-      agent_pool_profiles:
-        - name: default
-          count: 3 
-          vm_size: Standard_D2_v2
-      tags:
-        Environment: RedHatSummit
+    - name: Create a managed Azure Container Services (AKS) instance
+      azure_rm_aks:
+        name: "{{ aks_cluster_name }}"
+        resource_group: "{{ resource_group }}"
+        kubernetes_version: "1.12.7"
+        dns_prefix: "{{ aks_dns_prefix }}"
+        linux_profile:
+          admin_username:  "{{ admin_username }}"
+          ssh_key: "{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
+        service_principal:
+          client_id: "{{ lookup('env', 'AZURE_CLIENT_ID') }}"
+          client_secret: "{{ lookup('env', 'AZURE_SECRET') }}"
+        agent_pool_profiles:
+          - name: default
+            count: 2 
+            vm_size: Standard_D2_v2
+        tags:
+          Environment: RedHatSummit
+
+    - name: Create Cosmos DB (MongoDB) for Hero Voting App
+      azure_rm_cosmosdbaccount:
+        resource_group: "{{ resource_group }}"
+        name: "{{ vm_name }}-cosmosdb"
+        kind: mongo_db
+        state: present
+        enable_multiple_write_locations: false
+        consistency_policy:
+          default_consistency_level: "consistent_prefix"
+        geo_rep_locations:
+          - name: "{{ location }}"
+            failover_priority: 0
+        database_account_offer_type: Standard
+
+    - name: Obtain CosmosDB Facts
+      azure_rm_cosmosdbaccount_facts:
+        resource_group: "{{ resource_group }}"
+        name: "{{ vm_name }}-cosmosdb"
+        retrieve_keys: all
+        retrieve_connection_strings: yes
+      register: facts_output
+
+    - name: Getting CosmosDB Username
+      set_fact:
+        username: "{{ facts_output.accounts[0].name }}"
+
+    - name: Getting CosmosDB Connection String
+      set_fact:
+        constr: "{{ facts_output.accounts[0].connection_strings.connection_strings[0].connection_string }}"
+
+    - name: Getting CosmosDB Primary Master Key
+      set_fact:
+        primarykey: "{{ facts_output.accounts[0].primary_master_key }}"
+
+    - debug:
+        msg: "CosmosDB Username: {{ username }}"
+
+    - debug:
+        msg: "CosmosDB Connection String: {{ constr }}"
+
+    - debug:
+        msg: "CosmosDB Primary Master Key: {{ primarykey }}"
+
