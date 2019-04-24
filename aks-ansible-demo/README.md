@@ -1,4 +1,4 @@
-# Deploy a CosmosDB instance and AKS cluster with microservices running with Ansible
+# Deploy a CosmosDB instance and AKS cluster running microservices with Ansible
 <p align="center">
 </p>
 
@@ -11,14 +11,14 @@
     az aks create -g $resourceGroupName \
         -n aksName \
         -l eastus \
-        ...
+        ... # additional params elided because we'll automate with Ansible
     ```
 
 2. Connect to the AKS cluster
 
     ```
     # Install kubectl Kubernetes cli
-    az aks az aks install-cli
+    az aks install-cli
     
     # Connect kubectl to AKS
     az aks get-credentials -g $resourceGroupName -n $aksName
