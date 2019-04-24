@@ -74,9 +74,14 @@
         retrieve_connection_strings: yes
       register: cosmosdb_output
 
-    - debug:
-        msg: "AKS URL of Application: {{ aks_output.aks[0].properties.fqdn }}:8080" 
+    - name: Setting CosmosDB Connection String Variable
+      set_fact:
+        constr: "mongodb://{{ cosmosdb_output.accounts[0].name }}:{{ cosmosdb_output.accounts[0].primary_master_key }}@{{ cosmosdb_output.accounts[0].name }}.documents.azure.com:10255/webratings?ssl=true&replicaSet=globaldb"
 
-    - debug:
-        msg: "CosmosDB Connection String: {{ cosmosdb_output.accounts[0].connection_strings.connection_strings[0].connection_string }}"
+    - name: Setting K8S Secret with kubectl
+      command: "/usr/bin/kubectl create secret generic heroes-cosmosdb-secret --from-literal=cosmosUri={{ constr }}"
+      args:
+        creates: "
 
+
+  
