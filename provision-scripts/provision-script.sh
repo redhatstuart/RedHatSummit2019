@@ -29,7 +29,7 @@ echo "**************************************************************************
 	yum -y install deltarpm >> /root/yum-output.log
 	wget http://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
 	yum -y localinstall epel-release-latest-7.noarch.rpm >> /root/yum-output.log
-	yum -y install policycoreutils-python libsemanage-devel gcc gcc-c++ kernel-devel python-devel libxslt-devel libffi-devel openssl-devel python2-pip iptables-services git telnet >> /root/yum-output.log
+	yum -y install policycoreutils-python libsemanage-devel gcc gcc-c++ kernel-devel python-devel libxslt-devel libffi-devel openssl-devel python2-pip iptables-services git telnet kubernetes-client >> /root/yum-output.log
 echo "********************************************************************************************"
 	echo "`date` -- Securing host and changing default SSH port to 2112" >>/root/provision-script-output.log
 	sed -i "s/dport 22/dport 2112/g" /etc/sysconfig/iptables
