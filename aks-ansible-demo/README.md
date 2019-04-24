@@ -9,7 +9,7 @@
     resourceGroupName=myaksrg
     aksName=myaks
     az aks create -g $resourceGroupName \
-        -n aksName \
+        -n $aksName \
         -l eastus \
         ... # additional params elided because we'll automate with Ansible
     ```
