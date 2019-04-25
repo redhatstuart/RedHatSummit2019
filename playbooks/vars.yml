@@ -15,13 +15,15 @@ vm_name: MYVM
 location: MYAZUREDATACENTER
 
 # Function App Exercise
-function_name: zimsfunctionapp
 github_id: MYGITHUBID
-github_token: MYGITHUBTOKEN
+github_token: MYGITHUBPERSONALACCESSTOKEN
 
 ###########################################
 # DO NOT CHANGE ANYTHING BELOW THIS POINT
 ###########################################
+
+# The admin username that you would like to use for all of your VM assets. You will likely not need to connect to them.
+admin_username: student
 
 # Random Generated Number
 rnum: RANDOM

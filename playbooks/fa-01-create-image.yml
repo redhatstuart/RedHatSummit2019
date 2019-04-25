@@ -3,18 +3,18 @@
   connection: local
   vars_files:
    - ./vars-myvars.yml
-  vars:
-    registry_name: "{{ function_name }}{{ rnum }}acr"
-    task_name: buildtask
+
   tasks:
 
-    - name: Create container registry
+    - name: Create an Azure Container Registry for Azure Function
       azure_rm_containerregistry:
+        name: "{{ vm_name }}{{ rnum }}acr"
         resource_group: "{{ resource_group }}"
-        name: "{{ registry_name }}"
-        location: eastus
         admin_user_enabled: true
         sku: Premium
+        tags:
+            Release: Initial
+            Environment: RedHatSummit
            
     - name: Build Image using Azure Container Registry
       azure_rm_resource:
@@ -22,10 +22,10 @@
         resource_group: "{{ resource_group }}"
         provider: containerregistry
         resource_type: registries
-        resource_name: "{{ registry_name }}"
+        resource_name: "{{ vm_name }}{{ rnum }}acr"
         subresource:
           - type: tasks
-            name: "{{ task_name }}"
+            name: "buildtask"
         body:
           properties: 
             status: Enabled
@@ -57,4 +57,4 @@
               baseImageTrigger: 
                 name: myBaseImageTrigger
                 baseImageTriggerType: Runtime
-          location: eastus
+          location: "{{ location }}"

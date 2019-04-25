@@ -3,32 +3,35 @@
   connection: local
   vars_files:
    - ./vars-myvars.yml
-  vars:
-    storage_name: "{{ function_name }}{{ rnum }}st"
   tasks:
-    - name: Create a linux app service plan
+
+    - name: Create an Azure App Service Plan
       azure_rm_appserviceplan:
-        resource_group: "{{ resource_group }}"
-        name: "{{ function_app }}plan"
-        sku: S1
+        name: "{{ vm_name }}-appservice-plan"
         is_linux: true
         number_of_workers: 1
+        resource_group: "{{ resource_group }}"
+        sku: S1
 
-    - name: create storage account for function apps
+    - name: Create a Storage Account for Azure Function
       azure_rm_storageaccount:
-        resource_group: '{{ resource_group }}'
-        name: "{{ storage_name }}"
-        account_type: Standard_LRS
+        resource_group: "{{ resource_group }}"
+        name: "{{ vm_name }}2019func"
         kind: StorageV2
+        account_type: Standard_LRS
+        tags:
+          Tier: Development
+          Venue: RedHatSummit
+      register: output
 
-    - name: Obtain storage keys
+    - name: Obtain Access Keys for Storage Account
       azure_rm_resource:
         api_version: '2018-07-01'
         method: POST
         resource_group: "{{ resource_group }}"
         provider: storage
         resource_type: storageaccounts
-        resource_name: "{{ storage_name }}"
+        resource_name: "{{ vm_name }}2019func"
         subresource:
           - type: listkeys
       register: storage_output
@@ -36,15 +39,15 @@
     - name: Create container based function app
       azure_rm_functionapp:
         resource_group: "{{ resource_group }}"
-        name: "{{ function_name }}"
-        storage_account: "{{ storage_name }}"
+        name: "{{ vm_name }}functionapp"
+        storage_account: "{{ vm_name }}2019func"
         plan:
           resource_group: "{{ resource_group }}"
-          name: "{{ function_name }}plan"
+          name: "{{ vm_name }}-appservice-plan"
         container_settings:
           name: zikalino/functionapp:x7
         app_settings:
-          AzureWebJobsStorage: DefaultEndpointsProtocol=https;AccountName={{ function_app_name }}stx;AccountKey={{ storage_output['response']['keys'][0]['value'] }}
+          AzureWebJobsStorage: DefaultEndpointsProtocol=https;AccountName={{ vm_name }}2019func;AccountKey={{ storage_output['response']['keys'][0]['value'] }}
           DOCKER_REGISTRY_SERVER_URL: https://index.docker.io
           WEBSITE_NODE_DEFAULT_VERSION: 10.14.1
           WEBSITES_ENABLE_APP_SERVICE_STORAGE: no
