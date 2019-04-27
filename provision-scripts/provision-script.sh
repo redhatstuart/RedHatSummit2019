@@ -54,7 +54,11 @@ echo "**************************************************************************
 	systemctl set-default graphical.target >> /root/provision-script-output.log
 echo "********************************************************************************************"
 	echo "`date` -- Installing noVNC environment" >>/root/provision-script-output.log
-	yum -y install novnc python-websockify numpy tigervnc-server >> /root/yum-output.log
+	yum -y install python-websockify numpy tigervnc-server >> /root/yum-output.log
+        wget --quiet -P /usr/local https://github.com/novnc/noVNC/archive/v1.1.0.tar.gz
+        cd /usr/local
+        tar xvfz v1.1.0.tar.gz
+        ln -s /usr/local/noVNC-1.1.0/vnc.html /usr/local/noVNC-1.1.0/index.html
         wget --quiet -P /etc/systemd/system https://raw.githubusercontent.com/stuartatmicrosoft/RedHatSummit2019/master/provision-scripts/websockify.service
 	wget --quiet --no-check-certificate -P /etc/systemd/system "https://raw.githubusercontent.com/stuartatmicrosoft/RedHatSummit2019/master/provision-scripts/vncserver@:4.service"
 	openssl req -x509 -nodes -newkey rsa:2048 -keyout /etc/pki/tls/certs/novnc.pem -out /etc/pki/tls/certs/novnc.pem -days 365 -subj "/C=US/ST=Michigan/L=Ann Arbor/O=Lift And Shift/OU=AzureAnsible/CN=itscloudy.af"
