@@ -3,6 +3,8 @@
   connection: local
   vars_files:
     - ./vars-myvars.yml
+  roles:
+    - ../modules
 
   tasks:
 

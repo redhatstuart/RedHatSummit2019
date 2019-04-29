@@ -29,7 +29,7 @@ echo "**************************************************************************
 	yum -y install deltarpm >> /root/yum-output.log
 	wget http://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
 	yum -y localinstall epel-release-latest-7.noarch.rpm >> /root/yum-output.log
-	yum -y install policycoreutils-python libsemanage-devel gcc gcc-c++ kernel-devel python-devel libxslt-devel libffi-devel openssl-devel python2-pip iptables-services git telnet >> /root/yum-output.log
+	yum -y install policycoreutils-python libsemanage-devel gcc gcc-c++ kernel-devel python-devel libxslt-devel libffi-devel openssl-devel python2-pip iptables-services git telnet kubernetes-client >> /root/yum-output.log
 echo "********************************************************************************************"
 	echo "`date` -- Securing host and changing default SSH port to 2112" >>/root/provision-script-output.log
 	sed -i "s/dport 22/dport 2112/g" /etc/sysconfig/iptables
@@ -54,7 +54,11 @@ echo "**************************************************************************
 	systemctl set-default graphical.target >> /root/provision-script-output.log
 echo "********************************************************************************************"
 	echo "`date` -- Installing noVNC environment" >>/root/provision-script-output.log
-	yum -y install novnc python-websockify numpy tigervnc-server >> /root/yum-output.log
+	yum -y install python-websockify numpy tigervnc-server >> /root/yum-output.log
+        wget --quiet -P /usr/local https://github.com/novnc/noVNC/archive/v1.1.0.tar.gz
+        cd /usr/local
+        tar xvfz v1.1.0.tar.gz
+        ln -s /usr/local/noVNC-1.1.0/vnc.html /usr/local/noVNC-1.1.0/index.html
         wget --quiet -P /etc/systemd/system https://raw.githubusercontent.com/stuartatmicrosoft/RedHatSummit2019/master/provision-scripts/websockify.service
 	wget --quiet --no-check-certificate -P /etc/systemd/system "https://raw.githubusercontent.com/stuartatmicrosoft/RedHatSummit2019/master/provision-scripts/vncserver@:4.service"
 	openssl req -x509 -nodes -newkey rsa:2048 -keyout /etc/pki/tls/certs/novnc.pem -out /etc/pki/tls/certs/novnc.pem -days 365 -subj "/C=US/ST=Michigan/L=Ann Arbor/O=Lift And Shift/OU=AzureAnsible/CN=itscloudy.af"
@@ -73,9 +77,12 @@ echo "**************************************************************************
         echo "`date` -- Upgrading PIP and installing Ansible" >>/root/provision-script-output.log
         pip install --upgrade pip >> /root/pip-output.log
         pip install --upgrade python-dateutil >> /root/pip-output.log
+        pip install --upgrade openshift >> /root/pip-output.log
+        pip install --upgrade requests >> /root/pip-output.log
+        pip install --upgrade xmltodict >> /root/pip-outputlog
         yum -y remove pyOpenSSL rhn-check rhn-client-tools rhn-setup rhn-setup-gnome rhnlib rhnsd yum-rhn-plugin PackageKit* subscription-manager >>/root/yum-output.log
         pip install pyOpenSSL >> /root/pip-output.log
-        pip install ansible==2.8.0b1 >> /root/pip-output.log
+        pip install ansible==2.8.0rc1 >> /root/pip-output.log
         mkdir -p /etc/ansible
         echo "[ssh_connection]" > /etc/ansible/ansible.cfg
         echo "ssh_args = -o StrictHostKeyChecking=no" >> /etc/ansible/ansible.cfg

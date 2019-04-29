@@ -11,7 +11,7 @@
         name: "{{ vm_name }}{{ rnum }}acr"
         resource_group: "{{ resource_group }}"
         admin_user_enabled: true
-        sku: Basic
+        sku: Premium
         tags:
             Release: Initial
             Environment: RedHatSummit
