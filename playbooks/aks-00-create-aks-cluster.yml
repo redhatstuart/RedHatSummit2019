@@ -26,4 +26,10 @@
             vm_size: Standard_D2_v2
         tags:
           Environment: RedHatSummit
+      register: aks_output
+
+    - debug:
+        msg: "The name of your AKS cluster is: {{ aks_output.name }}"
+
+~
 
