@@ -26,7 +26,7 @@ This repository contains practical exercises for the Red Hat Summit 2019 Instruc
 	* Launching an application in Azure Kubernetes Service (AKS).
 	* Serverless applications using Azure functions.
 
-Content created by: [Stuart Kirk](https://github.com/stuartatmicrosoft) & [Zim Kalinowski](https://github.com/zikalino) with assistance from [Sasha Rosenbaum](https://github.com/divineops), [Harold Wong](https://github.com/haroldwongms), [Jason De Lorme](https://github.com/ms-jasondel), [Michael Yen-Chi Ho](https://github.com/yenchiho), [Patrick Rutledge](https://github.com/rut31337), [Manesh Raveendran](https://github.com/Manesh-R) and others.
+Content created by: [Stuart Kirk](https://github.com/stuartatmicrosoft) & [Zim Kalinowski](https://github.com/zikalino) with assistance from [Steve Roach](https://github.com/grandparoach), [Sasha Rosenbaum](https://github.com/divineops), [Harold Wong](https://github.com/haroldwongms), [Jason De Lorme](https://github.com/ms-jasondel), [Michael Yen-Chi Ho](https://github.com/yenchiho), [Patrick Rutledge](https://github.com/rut31337), [Manesh Raveendran](https://github.com/Manesh-R) and others.
 
 Base implementation for Function App Docker container comes from here:
 
