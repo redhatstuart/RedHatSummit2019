@@ -34,7 +34,7 @@ function ajaxpost(){
      }
     }
 
-    mypostrequest.open("POST", "http://localhost:8080/api/HttpTrigger", true);
+    mypostrequest.open("POST", "https://FUNCTIONNAME.azurewebsites.net/api/HttpTrigger", true);
     mypostrequest.setRequestHeader("Content-type", "text/plain");
     mypostrequest.send(document.getElementById("playbook").value);
 }
