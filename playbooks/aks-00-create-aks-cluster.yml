@@ -7,7 +7,6 @@
     - ../modules
 
   tasks:
-
     - name: Create a managed Azure Container Services (AKS) instance to support Hero Voting App
       azure_rm_aks:
         name: "{{ vm_name }}-aks"
@@ -30,6 +29,3 @@
 
     - debug:
         msg: "The name of your AKS cluster is: {{ aks_output.name }}"
-
-~
-
