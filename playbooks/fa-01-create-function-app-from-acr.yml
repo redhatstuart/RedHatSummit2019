@@ -25,18 +25,6 @@
           Venue: RedHatSummit
       register: output
 
-    - name: Obtain Access Keys for Storage Account
-      azure_rm_resource:
-        api_version: '2018-07-01'
-        method: POST
-        resource_group: "{{ resource_group }}"
-        provider: storage
-        resource_type: storageaccounts
-        resource_name: "{{ vm_name }}2019func"
-        subresource:
-          - type: listkeys
-      register: storage_output
-
     - name: Obtain Azure Container Registry Facts
       azure_rm_containerregistry_facts:
         resource_group: "{{ resource_group }}"
@@ -57,7 +45,3 @@
           registry_server_url: "{{ acr_output.registries[0].login_server }}"
           registry_server_user: "{{ acr_output.registries[0].name }}"
           registry_server_password: "{{ acr_output.registries[0].credentials.password }}"
-        app_settings:
-          AzureWebJobsStorage: DefaultEndpointsProtocol=https;AccountName={{ vm_name }}2019func;AccountKey={{ storage_output['response']['keys'][0]['value'] }}
-          WEBSITE_NODE_DEFAULT_VERSION: 10.14.1
-          WEBSITES_ENABLE_APP_SERVICE_STORAGE: no

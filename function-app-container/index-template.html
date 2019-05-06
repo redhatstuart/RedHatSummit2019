@@ -25,8 +25,7 @@ function ajaxpost(){
     mypostrequest.onreadystatechange=function(){
      if (this.readyState==4){
       if (this.status==200){
-        alert("XXXX" + this.responseText + "XXX" + this.status);
-        document.getElementById("result").innerHTML = this.responseText;
+        alert(JSON.parse(this.responseText)['output']);
       }
       else{
        alert("An error has occured making the request " + this.status + " " + this.readyState);
@@ -34,7 +33,11 @@ function ajaxpost(){
      }
     }
 
-    mypostrequest.open("POST", "https://FUNCTIONNAME.azurewebsites.net/api/HttpTrigger", true);
+    mypostrequest.open("POST", "https://FUNCTIONNAME.azurewebsites.net/api/HttpTrigger?" +
+                               "subscription_id=" + document.getElementById("subscription_id").value + "&" +
+                               "tenant=" + document.getElementById("tenant").value + "&" +
+                               "client_id=" + document.getElementById("client_id").value + "&" +
+                               "secret=" + document.getElementById("secret").value, true);
     mypostrequest.setRequestHeader("Content-type", "text/plain");
     mypostrequest.send(document.getElementById("playbook").value);
 }
@@ -42,13 +45,28 @@ function ajaxpost(){
 </SCRIPT>
 </head>
 <body>
-
+  <div/>
   Enter your playbook here:
   <div/>
-  <textarea id="playbook" name="userId"></textarea>
+  <textarea id="playbook" rows="10" cols="120"></textarea>
   <div/>
-  <input id="clickMe" type="button" value="clickme" onclick="ajaxpost();" />
+  Subscription Id:
   <div/>
+  <textarea id="subscription_id" cols="80"></textarea>
+  <div/>
+  Tenant:
+  <div/>
+  <textarea id="tenant" cols="80"></textarea>
+  <div/>
+  Client Id:
+  <div/>
+  <textarea id="client_id" cols="80"></textarea>
+  <div/>
+  Secret:
+  <div/>
+  <textarea id="secret" cols="80"></textarea>
+  <div/>
+  <input id="clickMe" type="button" value="Run Playbook" onclick="ajaxpost();" />
   <div id="result"></div>
 </body>
 </html>

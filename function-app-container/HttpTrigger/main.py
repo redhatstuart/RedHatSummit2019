@@ -17,10 +17,17 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     f.write(body) 
     f.close()
 
-    cmd = "ansible-playbook ./playbook.yml"
-    process = subprocess.Popen(cmd.split(), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    cmd = "export AZURE_CLIENT_ID=" + client + "; "
+    cmd += "export AZURE_SECRET=" + secret + "; "
+    cmd += "export AZURE_SUBSCRIPTION_ID=" + subscription_id + "; "
+    cmd += "export AZURE_TENANT=" + tenant + "; "
+    cmd += "ansible-playbook ./playbook.yml"
+
+    process = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
     output, error = process.communicate()
 
+    # output = cmd
+    # error = "no error"
     try:
         x = json.dumps({ 'output': str(output), 'error': str(error) })
         #if len(str(output) + str(error)) > 0:
