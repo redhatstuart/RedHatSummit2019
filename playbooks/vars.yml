@@ -3,17 +3,17 @@
 # CHANGE THE VALUES OF THESE AS APPROPRIATE FOR YOU
 #
 # The resource group you have been assigned - get this with "az group list"
-resource_group: MY_RESOURCE_GROUP
+resource_group: "MY_RESOURCE_GROUP"
 
 # The prefix that you would like to use for all of your Azure assets.  We recommend "firstnamelastname" NOTE: PLEASE USE ONLY [a-z][0-9] and no more than 15 characters!!!!!!
-vm_name: MYVM
+vm_name: "MYVM"
 
 # The location of the Azure Data Center you are in. This is probably "eastus" or "northcentralus" -- Look at your VNC FQDN at the top of the screen
-location: MYAZUREDATACENTER
+location: "MYAZUREDATACENTER"
 
 # Function App Exercise
-github_id: MYGITHUBID
-github_token: MYGITHUBPERSONALACCESSTOKEN
+github_id: "MYGITHUBID"
+github_token: "MYGITHUBPERSONALACCESSTOKEN"
 
 ###########################################
 # DO NOT CHANGE ANYTHING BELOW THIS POINT
